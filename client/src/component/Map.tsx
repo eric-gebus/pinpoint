@@ -22,6 +22,7 @@ function Map({ position }: MapProps) {
         });
       }
     }, [center, zoom, map]);
+    return null
   }
 
 
