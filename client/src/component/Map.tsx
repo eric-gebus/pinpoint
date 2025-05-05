@@ -11,6 +11,9 @@ interface ChangeViewProps {
 }
 
 function Map({ position }: MapProps) {
+  const {MAP_KEY}=process.env;
+  console.log(MAP_KEY);
+
   function ChangeView({ center, zoom }: ChangeViewProps) {
     const map = useMap();
     useEffect(() => {
