@@ -1,6 +1,8 @@
+import { fetchWeatherApi } from 'openmeteo';
+
 export default {
 
-  searchEvent: async function (position: number[]) {
+  searchEvent: async function (position: [number, number]) {
     try {
       const response = await fetch('http://localhose:3000/', { //TO UPDATE
         method: 'POST',
@@ -23,5 +25,28 @@ export default {
       console.log('Error in searchEvent', error)
       throw error
     }
+  },
+
+  weatherAPI: async function (position: [number, number]) {
+    try {
+      const params = {
+        "latitude": position[0],
+        "longitude": position[1],
+        "hourly": ["temperature_2m", "precipitation"],
+        "timezone": "auto",
+        "forecast_days": 1
+      };
+      const url = "https://api.open-meteo.com/v1/forecast";
+
+      const responses = await fetchWeatherApi(url, params);
+
+      return responses
+
+    } catch (error) {
+      console.log('Error in weatherAPI', error)
+      throw error
+    }
   }
+
+
 }

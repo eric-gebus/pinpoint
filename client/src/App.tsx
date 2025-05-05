@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 import Map from "./component/Map.tsx";
-import apiService from "./apiService.tsx";
+// import apiService from "./apiService.tsx";
+import Weather from "./component/Weather.tsx";
 
 interface GeolocationOptions {
   enableHighAccuracy?: boolean;
@@ -9,15 +10,11 @@ interface GeolocationOptions {
   maximumAge?: number;
 }
 
-interface GeolocationError {
-  readonly code: number;
-  readonly message: string;
-}
 
 function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
   const [position, setPosition] = useState<[number, number]>(defaultPosition);
-  const [eventList, setEventList] = useState<[]>([]);
+  // const [eventList, setEventList] = useState<[]>([]);
   // TO FIX WHEN WE KNOW HOW THE DATA LOOK
 
   const options: GeolocationOptions = {
@@ -42,18 +39,23 @@ function App() {
       console.log(`Longitude: ${crd.longitude}`);
       console.log(`More or less ${crd.accuracy} meters.`);
 
-      // Then search for events
-      const events = await apiService.searchEvent(position);
-      setEventList(events);
+      // const events = await apiService.searchEvent(position);
 
-    } catch (err: GeolocationError) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
+      // setEventList(events);
+
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.warn(`ERROR: ${err.message}`);
+      } else {
+        console.warn('Unknown error occurred', err);
+      }
   }
+}
 
 
   return (
     <>
+      <Weather position={position}/>
       {/* search-nav-container */}
       <div className="flex place-content-between p-2 ">
         {/* search-input */}
