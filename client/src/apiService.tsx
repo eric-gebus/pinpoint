@@ -4,7 +4,7 @@ export default {
 
   searchEvent: async function (position: [number, number]) {
     try {
-      const response = await fetch('http://localhose:3000/', { //TO UPDATE
+      const response = await fetch('http://localhost:3000/', { //TO UPDATE
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
