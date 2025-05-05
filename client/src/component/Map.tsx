@@ -12,8 +12,6 @@ interface ChangeViewProps {
 
 function Map({ position }: MapProps) {
   const MAP_KEY = import.meta.env.VITE_MAP_KEY;
-  console.log(MAP_KEY);
-
   function ChangeView({ center, zoom }: ChangeViewProps) {
     const map = useMap();
     useEffect(() => {
