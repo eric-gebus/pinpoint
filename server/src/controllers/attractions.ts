@@ -6,8 +6,9 @@ export async function searchAttractions(req:Request,res:Response){
        res.status(404).send("Latitude and/or longitude was not provided");
        return;
     }
+    const key=process.env.API_KEY!;
     const queryParamsDict: { [key: string]: string } = {
-     apikey: "q5OA3cAKzn2uQCgwoyGVlfFtCG0seAnA",
+     apikey:key,
      latlong: `${latitude},${longitude}`,
      unit: "km",
      size: "50"
