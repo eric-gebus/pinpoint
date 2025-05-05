@@ -46,8 +46,9 @@ function App() {
       const events = await apiService.searchEvent(position);
       setEventList(events);
 
-    } catch (error) {
-      console.warn(`ERROR: ${error}`);
+    } catch (err: GeolocationError) {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
   }
 
 
