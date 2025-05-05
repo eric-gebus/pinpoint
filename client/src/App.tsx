@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import Map from "./component/Map.tsx";
+import apiService from "./apiService.tsx";
 
 interface GeolocationOptions {
   enableHighAccuracy?: boolean;
@@ -16,6 +17,8 @@ interface GeolocationError {
 function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
   const [position, setPosition] = useState<[number, number]>(defaultPosition);
+  const [eventList, setEventList] = useState<[]>([]);
+  // TO FIX WHEN WE KNOW HOW THE DATA LOOK
 
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
@@ -23,22 +26,30 @@ function App() {
     maximumAge: 0,
   };
 
-  function success(pos: GeolocationPosition) {
-    const crd = pos.coords;
-    setPosition([crd.latitude, crd.longitude]);
-    console.log("Your current position is:");
-    console.log(`Latitude : ${crd.latitude}`);
-    console.log(`Longitude: ${crd.longitude}`);
-    console.log(`More or less ${crd.accuracy} meters.`);
+  async function getPositionAndEvents() {
+
+    try {
+      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+      });
+
+      const crd = pos.coords
+
+      setPosition([crd.latitude, crd.longitude]);
+
+      console.log("Your current position is:");
+      console.log(`Latitude : ${crd.latitude}`);
+      console.log(`Longitude: ${crd.longitude}`);
+      console.log(`More or less ${crd.accuracy} meters.`);
+
+      // Then search for events
+      const events = await apiService.searchEvent(position);
+      setEventList(events);
+
+    } catch (error) {
+      console.warn(`ERROR: ${error}`);
   }
 
-  function error(err: GeolocationError) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-  }
-
-  function getLocation() {
-    navigator.geolocation.getCurrentPosition(success, error, options);
-  }
 
   return (
     <>
@@ -68,7 +79,7 @@ function App() {
         <div className="bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
           <button
             className="group p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
-            onClick={getLocation}
+            onClick={getPositionAndEvents}
           >
             <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-2 py-2">
               <div className="flex gap-2 items-center">
