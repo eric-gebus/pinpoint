@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 
 export async function searchEvents(req:Request,res:Response){
-    const { latitude, longitude, radius, keyword } = req.query;
+    const { latitude, longitude, radius, keyword } = req.body;
     if (!(latitude && longitude)) {
        res.status(404).send("Latitude and/or longitude was not provided");
        return;
@@ -11,7 +11,7 @@ export async function searchEvents(req:Request,res:Response){
      apikey: key,
      latlong: `${latitude},${longitude}`,
      unit: "km",
-     size: "50",
+     size: "20",
      sort: "distance,asc"
     };
     if (radius) queryParamsDict.radius = radius.toString();
