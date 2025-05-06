@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
@@ -26,6 +26,16 @@ function App() {
     maximumAge: 0,
   };
 
+  useEffect(()=>{
+    (async()=>{
+      const events = await apiService.searchEvent(position);
+      console.log("events from app: ",events);
+      setEventList(events);
+    })();
+  },[position])
+
+  
+
   async function getPositionAndEvents() {
 
     try {
@@ -41,10 +51,7 @@ function App() {
       console.log(`Latitude : ${crd.latitude}`);
       console.log(`Longitude: ${crd.longitude}`);
       console.log(`More or less ${crd.accuracy} meters.`);
-
-      const events = await apiService.searchEvent(position);
-      setEventList(events);
-
+      
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.warn(`ERROR: ${err.message}`);
@@ -53,7 +60,6 @@ function App() {
       }
   }
 }
-
 
   return (
     <>
