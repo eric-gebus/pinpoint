@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { MapContainer,TileLayer, useMap } from "react-leaflet";
+import Pin from "./Pin";
 
 interface MapProps {
   position: [number, number];
@@ -42,11 +43,7 @@ function Map({ position }: MapProps) {
           attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         />
         <ChangeView center={position} zoom={18} />
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        <Pin position={position}/>
       </MapContainer>
     </>
   );
