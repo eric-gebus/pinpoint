@@ -28,7 +28,6 @@ function Weather({ position }: WeatherProps) {
   const [temperatures, setTemperatures] = useState<number[]>([]);
   const [weatherCodes, setWeatherCodes] = useState<number[]>([]);
   const [precipitationsProb, setPrecipitationProb] = useState<number[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
   function getWeatherIcon(code: number) {
     const icons: { [key: number]: string } = {
@@ -74,7 +73,6 @@ function Weather({ position }: WeatherProps) {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        setLoading(true);
         const responses = await apiService.weatherAPI(position);
         const response = responses[0];
         const utcOffsetSeconds = response.utcOffsetSeconds();
@@ -111,17 +109,12 @@ function Weather({ position }: WeatherProps) {
 
        } catch (error) {
          console.error('Error in fetchWeather', error);
-       } finally {
-         setLoading(false);
        }
      };
 
      fetchWeather();
    }, [position]);
 
-  if (loading) {
-    return <div className="weather-container">Loading weather data...</div>;
-  }
 
   return (
     <div className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md max-w-full overflow-x-auto">
