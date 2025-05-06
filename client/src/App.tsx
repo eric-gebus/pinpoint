@@ -6,6 +6,8 @@ import List from "./component/List.tsx";
 import Map from "./component/Map.tsx";
 import apiService from "./apiService.tsx";
 import Weather from "./component/Weather.tsx";
+import { Event } from "./eventType.ts";
+
 
 interface GeolocationOptions {
   enableHighAccuracy?: boolean;
@@ -17,7 +19,7 @@ interface GeolocationOptions {
 function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
   const [position, setPosition] = useState<[number, number]>(defaultPosition);
-  const [eventList, setEventList] = useState<[]>([]);
+  const [eventList, setEventList] = useState<Event[]>([]);
   // TO FIX WHEN WE KNOW HOW THE DATA LOOK
 
   const options: GeolocationOptions = {
@@ -67,7 +69,7 @@ function App() {
         <Weather position={position}/>
         <Navbar />
         <Routes>
-          <Route path="/map" element={<Map position={position} />} />
+          <Route path="/map" element={<Map position={position}  eventList={eventList} />} />
           <Route path="/list" element={<List />} />
         </Routes>
       </Router>
@@ -110,7 +112,7 @@ function App() {
       {/* map-container */}
       <div className="basis-full">
         <div className="m-3 overflow-hidden rounded-xl shadow-lg/50">
-          <Map position={position} />
+          <Map position={position} eventList={eventList} />
         </div>
       </div>
     </>

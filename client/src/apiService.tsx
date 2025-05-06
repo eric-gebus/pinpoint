@@ -20,7 +20,7 @@ export default {
       }
 
       const data = await response.json();
-      console.log("events from server: ",data);
+      // console.log("events from server: ",data);
       return data;
 
     } catch (error) {

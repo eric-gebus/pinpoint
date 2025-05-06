@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { MapContainer,TileLayer, useMap } from "react-leaflet";
 import Pin from "./Pin";
+import { Event } from "../eventType";
+
 
 interface MapProps {
   position: [number, number];
+  eventList:Event[];
 }
 
 interface ChangeViewProps {
@@ -11,7 +14,7 @@ interface ChangeViewProps {
   zoom: number;
 }
 
-function Map({ position }: MapProps) {
+function Map({ position,eventList }: MapProps) {
   const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
   function ChangeView({ center, zoom }: ChangeViewProps) {
@@ -43,7 +46,7 @@ function Map({ position }: MapProps) {
           attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         />
         <ChangeView center={position} zoom={18} />
-        <Pin position={position}/>
+        <Pin position={position} eventList={eventList}/>
       </MapContainer>
     </>
   );
