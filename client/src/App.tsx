@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
 import Map from "./component/Map.tsx";
-// import apiService from "./apiService.tsx";
+// import apiService from "./apiService.tsx"; //To keep
 import Weather from "./component/Weather.tsx";
 
 interface GeolocationOptions {
@@ -42,9 +42,9 @@ function App() {
       console.log(`Longitude: ${crd.longitude}`);
       console.log(`More or less ${crd.accuracy} meters.`);
 
-      // const events = await apiService.searchEvent(position);
+      // const events = await apiService.searchEvent(position); to keep
 
-      // setEventList(events);
+      // setEventList(events); to keep
 
     } catch (err: unknown) {
       if (err instanceof Error) {

@@ -32,7 +32,7 @@ export default {
       const params = {
         "latitude": position[0],
         "longitude": position[1],
-        "hourly": ["temperature_2m", "precipitation"],
+        "hourly": ["temperature_2m", "weather_code", "precipitation_probability"],
         "timezone": "auto",
         "forecast_days": 1
       };
