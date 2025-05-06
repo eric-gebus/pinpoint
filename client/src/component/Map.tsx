@@ -12,7 +12,6 @@ interface ChangeViewProps {
 
 function Map({ position }: MapProps) {
   const MAP_KEY = import.meta.env.VITE_MAP_KEY;
-  console.log(MAP_KEY);
 
   function ChangeView({ center, zoom }: ChangeViewProps) {
     const map = useMap();
@@ -35,13 +34,13 @@ function Map({ position }: MapProps) {
         scrollWheelZoom={false}
         style={{ minHeight: "600px", minWidth: "400px" }}
       >
-      <TileLayer
-        url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
-        tileSize={512}
-        zoomOffset={-1}
-        minZoom={1}
-        attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-      />
+        <TileLayer
+          url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
+          tileSize={512}
+          zoomOffset={-1}
+          minZoom={1}
+          attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+        />
         <ChangeView center={position} zoom={18} />
         <Marker position={position}>
           <Popup>
