@@ -4,13 +4,14 @@ export default {
 
   searchEvent: async function (position: [number, number]) {
     try {
-      const response = await fetch('http://localhost:3000/', { //TO UPDATE
+      const response = await fetch('http://localhost:3000/events/search', { //TO UPDATE
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          coordinates: position
+          latitude: position[0],
+          longitude:position[1]
         })
       })
 
@@ -19,6 +20,7 @@ export default {
       }
 
       const data = await response.json();
+      // console.log("events from server: ",data);
       return data;
 
     } catch (error) {

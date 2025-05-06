@@ -3,6 +3,6 @@ import { searchEvents } from '../controllers/event';
 
 const eventRouter=Router();
 
-eventRouter.get('/search',searchEvents);
+eventRouter.post('/search',searchEvents);
 
 export default eventRouter;
