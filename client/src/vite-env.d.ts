@@ -4,3 +4,138 @@ declare module '*.svg' {
   const content: string;
   export default content;
 }
+
+interface Event {
+  name:      string;
+  type:      string;
+  id:        string;
+  test:      boolean;
+  locale:    string;
+  images:    Image[];
+  distance:  number;
+  units:     string;
+  dates:     Dates;
+  ticketing: Ticketing;
+  _links:    EventLinks;
+  _embedded: Embedded;
+  url:       string;
+}
+
+interface Embedded {
+  venues: Venue[];
+}
+
+interface Venue {
+  name:           string;
+  type:           string;
+  id:             string;
+  test:           boolean;
+  locale:         string;
+  distance:       number;
+  units:          string;
+  postalCode:     string;
+  timezone:       string;
+  city:           City;
+  state:          State;
+  country:        Country;
+  address:        Address;
+  location:       Location;
+  upcomingEvents: UpcomingEvents;
+  _links:         VenueLinks;
+}
+
+interface VenueLinks {
+  self: Self;
+}
+
+interface Self {
+  href: string;
+}
+
+interface Address {
+  line1: string;
+}
+
+interface City {
+  name: string;
+}
+
+interface Country {
+  name:        string;
+  countryCode: string;
+}
+
+interface Location {
+  longitude: string;
+  latitude:  string;
+}
+
+interface State {
+  name:      string;
+  stateCode: string;
+}
+
+interface UpcomingEvents {
+  archtics:     number;
+  ticketmaster: number;
+  _total:       number;
+  _filtered:    number;
+}
+
+interface EventLinks {
+  self:   Self;
+  venues: Self[];
+}
+
+interface Dates {
+  start:            Start;
+  end:              End;
+  timezone:         string;
+  status:           Status;
+  spanMultipleDays: boolean;
+}
+
+interface End {
+  localDate:      Date;
+  localTime:      string;
+  dateTime:       Date;
+  approximate:    boolean;
+  noSpecificTime: boolean;
+}
+
+interface Start {
+  localDate:      Date;
+  localTime:      string;
+  dateTime:       Date;
+  dateTBD:        boolean;
+  dateTBA:        boolean;
+  timeTBA:        boolean;
+  noSpecificTime: boolean;
+}
+
+interface Status {
+  code: string;
+}
+
+interface Image {
+  ratio:    Ratio;
+  url:      string;
+  width:    number;
+  height:   number;
+  fallback: boolean;
+}
+
+enum Ratio {
+  The16_9 = "16_9",
+  The3_2 = "3_2",
+  The4_3 = "4_3",
+}
+
+interface Ticketing {
+  safeTix: SafeTix;
+  id:      string;
+}
+
+interface SafeTix {
+  enabled: boolean;
+}
