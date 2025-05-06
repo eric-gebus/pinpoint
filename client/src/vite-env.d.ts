@@ -4,3 +4,8 @@ declare module '*.svg' {
   const content: string;
   export default content;
 }
+
+declare module '*.png' {
+  const value: string; // path to the file
+  export default value;
+}

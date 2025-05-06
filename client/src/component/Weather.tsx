@@ -52,11 +52,16 @@ function Weather({ position }: WeatherProps) {
     fetchWeather();
   }, [position]);
 
-  return (
 
+  return (
     <div className="weather-container">
+      <div className="weather-list">
+
+      </div>
+
     </div>
   );
 }
 
 export default Weather;
+
