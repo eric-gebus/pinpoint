@@ -53,7 +53,7 @@ function App() {
       console.log(`More or less ${crd.accuracy} meters.`);
 
 
-  
+
 
     } catch (err: unknown) {
       if (err instanceof Error) {
