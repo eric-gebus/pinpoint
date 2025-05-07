@@ -5,7 +5,7 @@ interface PinProps{
     eventList:Event[]
 }
 
-function Pin({position,eventList}:PinProps) {
+function Pin({eventList}:PinProps) {
 
   return (
     <>

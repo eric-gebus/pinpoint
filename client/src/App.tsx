@@ -5,7 +5,7 @@ import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
 import Map from "./component/Map.tsx";
 import apiService from "./apiService.tsx";
-// import Weather from "./component/Weather.tsx";
+import Weather from "./component/Weather.tsx";
 import Favorites from "./component/Favorites.tsx";
 
 interface GeolocationOptions {
@@ -16,7 +16,6 @@ interface GeolocationOptions {
 
 function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
-  // const [appDefaultPosition,setAppDefaultPosition]=useState<[number,number]>(defaultPosition)
   const [position, setPosition] = useState<[number, number]>();
   const [eventList, setEventList] = useState<Event[]>([]);
   
@@ -71,7 +70,7 @@ function App() {
   return (
     <>
       <Router>
-        {/* <Weather position={position} /> */}
+        <Weather position={position?position:defaultPosition} />
         <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
