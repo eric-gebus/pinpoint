@@ -75,7 +75,7 @@ function Map({ position, getPositionAndEvents, eventList }: MapProps) {
           center={position}
           zoom={13}
           scrollWheelZoom={true}
-          style={{ minHeight: "600px", minWidth: "400px" }}
+          style={{ height: "55vh", width: "100vw" }}
           >
           <TileLayer
             url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}

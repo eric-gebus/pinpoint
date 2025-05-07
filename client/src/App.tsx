@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
 import Map from "./component/Map.tsx";
@@ -33,8 +38,7 @@ function App() {
         setEventList(events);
       }
     })();
-  },[position])
-
+  }, [position]);
 
   async function getPositionAndEvents() {
     try {
@@ -84,9 +88,10 @@ function App() {
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList}/>} />
+          <Route path="/list" element={<List eventList={eventList} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
+        <Navbar/>
       </Router>
     </>
   );
