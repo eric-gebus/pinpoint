@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
 import Map from "./component/Map.tsx";
@@ -18,9 +23,8 @@ function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
   const [position, setPosition] = useState<[number, number]>(defaultPosition);
   const [eventList, setEventList] = useState<Event[]>([]);
-// const [eventList, setEventList] = useState<[]>([]);
-// TO FIX WHEN WE KNOW HOW THE DATA LOOK
-
+  // const [eventList, setEventList] = useState<[]>([]);
+  // TO FIX WHEN WE KNOW HOW THE DATA LOOK
 
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
@@ -28,14 +32,13 @@ function App() {
     maximumAge: 0,
   };
 
-  useEffect(()=>{
-    (async()=>{
+  useEffect(() => {
+    (async () => {
       const events = await apiService.searchEvent(position);
-      console.log("events from app: ",events);
+      console.log("events from app: ", events);
       setEventList(events);
     })();
-  },[position])
-
+  }, [position]);
 
   async function getPositionAndEvents() {
     try {
@@ -51,10 +54,6 @@ function App() {
       console.log(`Latitude : ${crd.latitude}`);
       console.log(`Longitude: ${crd.longitude}`);
       console.log(`More or less ${crd.accuracy} meters.`);
-
-
-  
-
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.warn(`ERROR: ${err.message}`);
@@ -72,7 +71,6 @@ function App() {
     <>
       <Router>
         <Weather position={position} />
-        <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
           <Route
@@ -85,9 +83,10 @@ function App() {
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList}/>} />
+          <Route path="/list" element={<List eventList={eventList} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
+        <Navbar />
       </Router>
     </>
   );

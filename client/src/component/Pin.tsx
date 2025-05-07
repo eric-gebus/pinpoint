@@ -28,11 +28,11 @@ function Pin({position,eventList}:PinProps) {
 
             })
         }
-        {/* <Marker position={position}>
+        <Marker position={position}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
-        </Marker> */}
+        </Marker>
     </>
   );
 }

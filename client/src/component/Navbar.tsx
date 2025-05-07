@@ -2,16 +2,17 @@ import { Link } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="flex m-2 w-fit overflow-hidden bg-white border divide-x rounded-lg">
-      <button className="px-4 py-2 text-sm font-medium">
+    <nav className="fixed bottom-5 left-5 right-5 flex flex-row justify-center 
+                    overflow-hidden bg-white border divide-x rounded-lg shadow-lg/50">
+      <button className="flex-1 text-center text-xl font-medium p-4">
         <Link to="/map">Map</Link>
       </button>
 
-      <button className="px-4 py-2 text-sm font-medium ">
+      <button className="flex-1 text-center text-xl font-medium p-4">
         <Link to="/list">List</Link>
       </button>
 
-      <button className="px-4 py-2 text-sm font-medium">
+      <button className="flex-1 text-center text-xl font-medium p-4">
         <Link to="/favorites">Favs</Link>
       </button>
     </nav>
