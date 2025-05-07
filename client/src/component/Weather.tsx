@@ -9,6 +9,7 @@ import rain from "../assets/weather_icons/moderate_rain.png";
 import heavy_rain from "../assets/weather_icons/heavy-rain.png";
 import snow from "../assets/weather_icons/snowflake.png";
 import thunder from "../assets/weather_icons/thunderstorm.png";
+import { MdChevronLeft, MdChevronRight} from 'react-icons/md'
 
 interface WeatherProps {
   position: [number, number];
@@ -98,7 +99,7 @@ function Weather({ position }: WeatherProps) {
          );
 
          if (startIndex >= 0) {
-           const endIndex = Math.min(startIndex + 6, weatherData.hourly.time.length);
+           const endIndex = Math.min(startIndex + 24, weatherData.hourly.time.length);
            setHourlyTimes(weatherData.hourly.time.slice(startIndex, endIndex));
            setTemperatures(weatherData.hourly.temperature2m.slice(startIndex, endIndex));
            setWeatherCodes(weatherData.hourly.weatherCode.slice(startIndex, endIndex));
@@ -115,32 +116,48 @@ function Weather({ position }: WeatherProps) {
      fetchWeather();
    }, [position]);
 
+   function slideLeft() {
+    const slider = document.getElementById('slider');
+    slider.scrollLeft = slider.scrollLeft - 500
+   }
+
+   function slideRight() {
+    const slider = document.getElementById('slider');
+    slider.scrollLeft = slider.scrollLeft - 500
+   }
+
 
   return (
-    <div className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md max-w-full overflow-x-auto">
+    <div className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md shadow-xl max-w-full">
     <h3 className="text-lg font-semibold mb-3 text-center">Weather Forecast</h3>
-    <div className="flex space-x-6 pb-2">
-      {hourlyTimes.map((time, index) => (
-        <div key={index} className="flex flex-col items-center min-w-[60px]">
-          <div className="font-bold mb-1">
-            {index === 0 ? 'Now' : formatHourlyTime(time)}
-          </div>
-          <div className="mb-1">
-            <img
-              src={getWeatherIcon(weatherCodes[index])}
-              className="w-10 h-10"
-            />
-          </div>
-          <div className="text-lg font-medium mb-1">
-            {Math.round(temperatures[index])}°C
-          </div>
-          <div className="text-sm text-blue-600">
-            {precipitationsProb[index]}%
-          </div>
+    <div className='relative flex items-center'>
+      <MdChevronLeft size={40} />
+      <div id ='slider' className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth">
+        <div className="flex space-x-6 pb-2">
+          {hourlyTimes.map((time, index) => (
+            <div key={index} className="flex flex-col items-center min-w-[60px]">
+              <div className="font-bold mb-1">
+                {index === 0 ? 'Now' : formatHourlyTime(time)}
+              </div>
+              <div className="mb-1">
+                <img
+                  src={getWeatherIcon(weatherCodes[index])}
+                  className="w-10 h-10"
+                />
+              </div>
+              <div className="text-lg font-medium mb-1">
+                {Math.round(temperatures[index])}°C
+              </div>
+              <div className="text-sm text-blue-600">
+                {precipitationsProb[index]}%
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+      <MdChevronRight size={40} />
     </div>
-  </div>
+    </div>
 );
 }
 
