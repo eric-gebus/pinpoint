@@ -8,7 +8,7 @@ const myIcon = new L.Icon({
     popupAnchor:  [-0, -0],
     iconSize: [36,40],
     shadowSize:[50, 64],
-    
+
 });
 
 interface PinProps{
@@ -22,11 +22,8 @@ function Pin({position,eventList}:PinProps) {
     <>
         {
             eventList.map((event:Event)=>{
-                // console.log('event: ',event);
                 const latitude=Number(event._embedded.venues[0].location.latitude);
                 const longitude=Number(event._embedded.venues[0].location.longitude);
-                // console.log('event latitude: ',latitude);
-                // console.log('event longitude: ',longitude);
                 const eventPosition:[number,number]=[latitude,longitude];
                 return <Marker key={event.id} position={eventPosition}>
                 <Popup>
@@ -36,10 +33,10 @@ function Pin({position,eventList}:PinProps) {
 
             })
         }
-        {      
+        {
            eventList.length>0&&<Marker position={position} icon={myIcon}>
                 <Popup>
-                    Your location <br /> 
+                    Your location <br />
                 </Popup>
             </Marker>
         }
