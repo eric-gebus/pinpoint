@@ -118,21 +118,24 @@ function Weather({ position }: WeatherProps) {
 
    function slideLeft() {
     const slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft - 500
-   }
+    if (slider) {
+      slider.scrollLeft -= 500;
+    }
+  }
 
-   function slideRight() {
+  function slideRight() {
     const slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft - 500
-   }
-
+    if (slider) {
+      slider.scrollLeft += 500;
+    }
+  }
 
   return (
     <div className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md shadow-xl max-w-full">
     <h3 className="text-lg font-semibold mb-3 text-center">Weather Forecast</h3>
     <div className='relative flex items-center'>
-      <MdChevronLeft size={40} />
-      <div id ='slider' className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth">
+      <MdChevronLeft className="opacity-50 cursor-pointer hover:opacity-100" onClick={slideLeft} size={40} />
+      <div id ='slider' className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide no-scrollbar">
         <div className="flex space-x-6 pb-2">
           {hourlyTimes.map((time, index) => (
             <div key={index} className="flex flex-col items-center min-w-[60px]">
@@ -155,7 +158,7 @@ function Weather({ position }: WeatherProps) {
           ))}
         </div>
       </div>
-      <MdChevronRight size={40} />
+      <MdChevronRight className="opacity-50 cursor-pointer hover:opacity-100" onClick={slideRight} size={40} />
     </div>
     </div>
 );

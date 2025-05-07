@@ -6,7 +6,7 @@ declare module '*.svg' {
 }
 
 declare module '*.png' {
-  const value: string; // path to the file
+  const value: string;
   export default value;
 }
 

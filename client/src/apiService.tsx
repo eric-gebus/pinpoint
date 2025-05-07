@@ -36,7 +36,6 @@ export default {
         "longitude": position[1],
         "hourly": ["temperature_2m", "weather_code", "precipitation_probability"],
         "timezone": "auto",
-        "forecast_days": 1
       };
       const url = "https://api.open-meteo.com/v1/forecast";
 
