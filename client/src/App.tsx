@@ -16,12 +16,9 @@ interface GeolocationOptions {
 
 function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
-  const [position, setPosition] = useState<[number, number]>(defaultPosition);
+  const [position, setPosition] = useState<[number, number]>();
   const [eventList, setEventList] = useState<Event[]>([]);
-// const [eventList, setEventList] = useState<[]>([]);
-// TO FIX WHEN WE KNOW HOW THE DATA LOOK
-
-
+  
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -30,9 +27,11 @@ function App() {
 
   useEffect(()=>{
     (async()=>{
-      const events = await apiService.searchEvent(position);
-      console.log("events from app: ",events);
-      setEventList(events);
+      if(position){
+        const events = await apiService.searchEvent(position);
+        console.log("events from app: ",events);
+        setEventList(events);
+      }
     })();
   },[position])
 
@@ -71,7 +70,7 @@ function App() {
   return (
     <>
       <Router>
-        <Weather position={position} />
+        <Weather position={position?position:defaultPosition} />
         <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
@@ -80,7 +79,7 @@ function App() {
             element={
               <Map
                 eventList={eventList}
-                position={position}
+                position={position?position:defaultPosition}
                 getPositionAndEvents={getPositionAndEvents}
               />
             }
