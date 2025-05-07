@@ -74,7 +74,7 @@ function Map({ position, getPositionAndEvents, eventList }: MapProps) {
           <MapContainer
           center={position}
           zoom={13}
-          scrollWheelZoom={false}
+          scrollWheelZoom={true}
           style={{ minHeight: "600px", minWidth: "400px" }}
           >
           <TileLayer
