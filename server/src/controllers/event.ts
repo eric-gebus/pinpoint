@@ -27,5 +27,3 @@ export async function searchEvents(req:Request,res:Response){
      res.send({ error: `${err}` });
     }
 }
-
-// GET localhost:3000/events/search?latitude=40.7128&longitude=74.0060&keyword=dogs
