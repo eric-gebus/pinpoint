@@ -1,11 +1,22 @@
 import {Marker, Popup} from "react-leaflet";
+import L from 'leaflet';
+import marker from '../assets/map.png';
+
+const myIcon = new L.Icon({
+    iconUrl: marker,
+    iconRetinaUrl: marker,
+    popupAnchor:  [-0, -0],
+    iconSize: [36,40],
+    shadowSize:[50, 64],
+    
+});
 
 interface PinProps{
     position:[number, number];
     eventList:Event[]
 }
 
-function Pin({eventList}:PinProps) {
+function Pin({position,eventList}:PinProps) {
 
   return (
     <>
@@ -23,15 +34,15 @@ function Pin({eventList}:PinProps) {
                 </Popup>
               </Marker>
 
-
-
             })
         }
-        {/* <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker> */}
+        {      
+           eventList.length>0&&<Marker position={position} icon={myIcon}>
+                <Popup>
+                    Your location <br /> 
+                </Popup>
+            </Marker>
+        }
     </>
   );
 }
