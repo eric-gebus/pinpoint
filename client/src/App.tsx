@@ -70,7 +70,7 @@ function App() {
   return (
     <>
       <Router>
-        <Weather position={position} />
+        <Weather position={position?position:defaultPosition} />
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
           <Route
@@ -86,7 +86,7 @@ function App() {
           <Route path="/list" element={<List eventList={eventList} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
-        <Navbar />
+        <Navbar/>
       </Router>
     </>
   );
