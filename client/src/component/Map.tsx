@@ -1,32 +1,37 @@
-import { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import Pin from "./Pin";
-
 
 interface MapProps {
   position: [number, number];
   eventList:Event[];
   getPositionAndEvents: () => void;
+  mapZoom: number;
+  setMapZoom: (arg: number) => void;
 }
 
 interface ChangeViewProps {
   center: [number, number];
-  zoom: number;
 }
 
-function Map({ position, getPositionAndEvents, eventList }: MapProps) {
-  const MAP_KEY = import.meta.env.VITE_MAP_KEY;
+const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
-  function ChangeView({ center, zoom }: ChangeViewProps) {
+function Map({ position, getPositionAndEvents, eventList, mapZoom, setMapZoom }: MapProps) {
+
+  function ChangeView({ center }: ChangeViewProps) {
     const map = useMap();
-    useEffect(() => {
-      if (center) {
-        map.setView(center, zoom, {
-          duration: 1,
-          easeLinearity: 0.25,
-        });
-      }
-    }, [center, zoom, map]);
+    const mapCenter = map.getCenter();
+    if (mapCenter.lat === 51.505) {
+      console.log("set");
+      map.setView(center, mapZoom, {
+        duration: 1,
+        easeLinearity: 0.25,
+      });
+    }
+    map.addEventListener("zoom", ({ target }) => setMapZoom(target._zoom));
+    map.setView(map.getCenter(), mapZoom, {
+      duration: 1,
+      easeLinearity: 0.25,
+    });
     return null;
   }
 
@@ -84,7 +89,7 @@ function Map({ position, getPositionAndEvents, eventList }: MapProps) {
             minZoom={1}
             attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
           />
-        <ChangeView center={position} zoom={11} />
+        <ChangeView center={position} />
         <Pin position={position} eventList={eventList}/>
       </MapContainer>
         </div>
