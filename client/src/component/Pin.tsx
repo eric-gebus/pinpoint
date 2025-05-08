@@ -1,6 +1,6 @@
 import {Marker, Popup} from "react-leaflet";
 import L from 'leaflet';
-import marker from '../assets/map.png';
+import marker from '../assets/street-view.png';
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
