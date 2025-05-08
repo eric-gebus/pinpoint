@@ -2,20 +2,23 @@ import { Link } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="fixed bottom-5 left-5 right-5 flex flex-row justify-center 
-                    overflow-hidden bg-white border divide-x rounded-lg shadow-lg/50"
-                    style={{ zIndex: 1000 }}>
-      <button className="flex-1 text-center text-xl font-medium p-4">
-        <Link to="/map">Map</Link>
-      </button>
+    <nav
+      className="fixed bottom-5 left-5 right-5 flex overflow-hidden bg-white border divide-x rounded-lg shadow-lg/50"
+      style={{ zIndex: 1000 }}>
+      <Link to="/map" className="flex-auto flex flex-col items-center justify-center text-center text-xs font-medium p-2">
+        <img src="navbar_icons/navigator.png" alt="Map" className="h-10 w-10" />
+        <span>Map</span>
+      </Link>
 
-      <button className="flex-1 text-center text-xl font-medium p-4">
-        <Link to="/list">List</Link>
-      </button>
+      <Link to="/list" className="flex-auto flex flex-col items-center justify-center text-center text-xs font-medium p-2">
+        <img src="navbar_icons/list.png" alt="List" className="h-8 w-8" />
+        <span>List</span>
+      </Link>
 
-      <button className="flex-1 text-center text-xl font-medium p-4">
-        <Link to="/favorites">Favs</Link>
-      </button>
+      <Link to="/favorites" className="flex-auto flex flex-col items-center justify-center text-center text-xs font-medium p-2">
+        <img src="navbar_icons/favourite.png" alt="Favorites" className="h-8 w-8" />
+        <span>Favs</span>
+      </Link>
     </nav>
   );
 };

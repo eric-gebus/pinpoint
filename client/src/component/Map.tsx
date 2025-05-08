@@ -3,7 +3,7 @@ import Pin from "./Pin";
 
 interface MapProps {
   position: [number, number];
-  eventList:Event[];
+  eventList: Event[];
   getPositionAndEvents: () => void;
   mapZoom: number;
   setMapZoom: (arg: number) => void;
@@ -15,8 +15,13 @@ interface ChangeViewProps {
 
 const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
-function Map({ position, getPositionAndEvents, eventList, mapZoom, setMapZoom }: MapProps) {
-
+function Map({
+  position,
+  getPositionAndEvents,
+  eventList,
+  mapZoom,
+  setMapZoom,
+}: MapProps) {
   function ChangeView({ center }: ChangeViewProps) {
     const map = useMap();
     const mapCenter = map.getCenter();
@@ -59,39 +64,40 @@ function Map({ position, getPositionAndEvents, eventList, mapZoom, setMapZoom }:
           </svg>
           <input type="search" required placeholder="Search" />
         </label>
-        {/* button-container */}
-        <div className="bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
-          <button
-            className="group p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
-            onClick={getPositionAndEvents}
-          >
-            <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-2 py-2">
-              <div className="flex gap-2 items-center">
-                <span className="font-semibold">Get my position</span>
-              </div>
-            </div>
-          </button>
-        </div>
       </div>
       {/* map-container */}
-      <div className="basis-full">
-        <div className="m-3 overflow-hidden rounded-xl shadow-lg/50">
-          <MapContainer
-          center={position}
-          zoom={13}
-          scrollWheelZoom={true}
-          style={{ height: "55vh", width: "100vw" }}
+      <div className="basis-full relative">
+        <div className="m-3 overflow-hidden rounded-xl shadow-lg/50 relative">
+          {
+            <MapContainer
+              center={position}
+              zoom={13}
+              scrollWheelZoom={true}
+              style={{ height: "55vh", width: "100vw" }}
+            >
+              <TileLayer
+                url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
+                tileSize={512}
+                zoomOffset={-1}
+                minZoom={1}
+                attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+              />
+              <ChangeView center={position} />
+              <Pin position={position} eventList={eventList} />
+            </MapContainer>
+          }
+          {/* Button container */}
+          <div
+            className="absolute bottom-4 right-1 p-[4px] rounded-[16px]"
+            style={{ zIndex: 1000 }}
           >
-          <TileLayer
-            url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
-            tileSize={512}
-            zoomOffset={-1}
-            minZoom={1}
-            attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-          />
-        <ChangeView center={position} />
-        <Pin position={position} eventList={eventList}/>
-      </MapContainer>
+            <button
+              className="group p-[4px] rounded-[12px] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
+              onClick={getPositionAndEvents}
+            >
+              <img src="gps.png" alt="Get Position" className="h-10 w-10" />
+            </button>
+          </div>
         </div>
       </div>
     </>
