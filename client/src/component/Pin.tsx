@@ -1,6 +1,6 @@
 import {Marker, Popup} from "react-leaflet";
 import L from 'leaflet';
-import marker from '../assets/street-view.png';
+import marker from '../assets/icon_isolated.png';
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
@@ -11,7 +11,7 @@ const myIcon = new L.Icon({
     iconUrl: marker,
     iconRetinaUrl: marker,
     popupAnchor:  [-0, -0],
-    iconSize: [36,40],
+    iconSize: [30,42],
     shadowSize:[50, 64],
     
 });
