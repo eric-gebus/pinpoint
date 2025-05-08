@@ -9,3 +9,13 @@
     scrollbar-width: none;
   }
 }
+
+:root {
+  background-image: url("bg/bg_gradient.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100%;
+  width: 100%;
+}
+
