@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import EventModel from '../models/event';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -75,6 +76,21 @@ export async function searchEvents(req:Request,res:Response){
      res.statusCode = 400;
      res.send({ error: `${err}` });
     }
+}
+
+export async function favoriteEvent(req:Request,res:Response){
+  const {name,url,image,address,distance,startDate,endDate}=req.body;
+  const event=new EventModel({
+    name,
+    url,
+    image,
+    address,
+    distance,
+    startDate,
+    endDate
+  })
+  await event.save();
+  res.json("saved meeh");
 }
 
 // GET localhost:3000/events/search?latitude=40.7128&longitude=74.0060&keyword=dogs

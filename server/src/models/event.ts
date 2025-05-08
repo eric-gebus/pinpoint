@@ -1,21 +1,28 @@
 import mongoose from 'mongoose';
 
+interface pinPointEvent{
+    name: String,
+    id?: String,
+    url?:String,
+    locale?: String,
+    image?:String,
+    address?:String,
+    distance?:Number,
+    startDate?:Date,
+    endDate?:Date,
+}
 
-const eventSchema = new mongoose.Schema({
-     name: String,
-     type: String,
-     id: String,
-     test: Boolean,
-     url:String,
-     locale: String,
-     image:String,
-     location:String,
-     summary:String,
-     date:Date,
-     time:Date,
-     about:String,
-     price:Number
+const eventSchema = new mongoose.Schema<pinPointEvent>({
+     name: {type:String,required:true},
+     id: {type:String},
+     url: {type:String},
+     locale:  {type:String},
+     image: {type:String},
+     address: {type:String},
+     distance: {type:Number},
+     startDate: {type:Date},
+     endDate: {type:Date},
     });
-const eventModel = mongoose.model('events', eventSchema);
+const EventModel = mongoose.model<pinPointEvent>('events', eventSchema);
 
-export default eventModel;
+export default EventModel;
