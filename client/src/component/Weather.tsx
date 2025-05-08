@@ -24,43 +24,48 @@ interface WeatherData {
   };
 }
 
+interface HourlyWeather {
+    time: Date;
+    temperature: number;
+    weatherCode: number;
+    precipitationProbability: number;
+}
+
 function Weather({ position }: WeatherProps) {
-  const [hourlyTimes, setHourlyTimes] = useState<Date[]>([]);
-  const [temperatures, setTemperatures] = useState<number[]>([]);
-  const [weatherCodes, setWeatherCodes] = useState<number[]>([]);
-  const [precipitationsProb, setPrecipitationProb] = useState<number[]>([]);
+  const [hourlyWeather, setHourlyWeather] = useState<HourlyWeather[]>([])
+
+  const icons: { [key: number]: string } = {
+    0: sun,
+    1: cloudy,
+    2: cloudy,
+    3: overcast,
+    45: fog,
+    48: fog,
+    51: light_rain,
+    53: light_rain,
+    55: rain,
+    56: rain,
+    57: heavy_rain,
+    61: rain,
+    63: heavy_rain,
+    65: heavy_rain,
+    66: rain,
+    67: heavy_rain,
+    71: snow,
+    73: snow,
+    75: snow,
+    77: snow,
+    80: rain,
+    81: rain,
+    82: rain,
+    85: snow,
+    86: snow,
+    95: thunder,
+    96: thunder,
+    99: thunder,
+  };
 
   function getWeatherIcon(code: number) {
-    const icons: { [key: number]: string } = {
-      0: sun,
-      1: cloudy,
-      2: cloudy,
-      3: overcast,
-      45: fog,
-      48: fog,
-      51: light_rain,
-      53: light_rain,
-      55: rain,
-      56: rain,
-      57: heavy_rain,
-      61: rain,
-      63: heavy_rain,
-      65: heavy_rain,
-      66: rain,
-      67: heavy_rain,
-      71: snow,
-      73: snow,
-      75: snow,
-      77: snow,
-      80: rain,
-      81: rain,
-      82: rain,
-      85: snow,
-      86: snow,
-      95: thunder,
-      96: thunder,
-      99: thunder,
-    };
     return icons[code] || sun;
   }
 
@@ -89,6 +94,8 @@ function Weather({ position }: WeatherProps) {
             precipitationProbability: Array.from(hourly.variables(2)!.valuesArray()!),
           },
         };
+
+
         //AI >>>>>
          const now = new Date();
          const currentHour = new Date(now);
@@ -99,19 +106,21 @@ function Weather({ position }: WeatherProps) {
          );
 
          if (startIndex >= 0) {
-           const endIndex = Math.min(startIndex + 24, weatherData.hourly.time.length);
-           setHourlyTimes(weatherData.hourly.time.slice(startIndex, endIndex));
-           setTemperatures(weatherData.hourly.temperature2m.slice(startIndex, endIndex));
-           setWeatherCodes(weatherData.hourly.weatherCode.slice(startIndex, endIndex));
-           setPrecipitationProb(weatherData.hourly.precipitationProbability.slice(startIndex, endIndex));
-         }
-
-        //<<<<< AI
-
-       } catch (error) {
-         console.error('Error in fetchWeather', error);
-       }
-     };
+          const endIndex = Math.min(startIndex + 24, weatherData.hourly.time.length);
+          const slicedData = weatherData.hourly.time
+            .slice(startIndex, endIndex)
+            .map((time, i) => ({
+              time,
+              temperature: weatherData.hourly.temperature2m[startIndex + i],
+              weatherCode: weatherData.hourly.weatherCode[startIndex + i],
+              precipitationProbability: weatherData.hourly.precipitationProbability[startIndex + i],
+            }));
+          setHourlyWeather(slicedData);
+        }
+      } catch (error) {
+        console.error('Error in fetchWeather', error);
+      }
+    };
 
      fetchWeather();
    }, [position]);
@@ -137,22 +146,22 @@ function Weather({ position }: WeatherProps) {
       <MdChevronLeft className="opacity-50 cursor-pointer hover:opacity-100" onClick={slideLeft} size={40} />
       <div id ='slider' className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide no-scrollbar">
         <div className="flex space-x-6 pb-2">
-          {hourlyTimes.map((time, index) => (
+          {hourlyWeather.map((time, index) => (
             <div key={index} className="flex flex-col items-center min-w-[60px]">
               <div className="font-bold mb-1">
-                {index === 0 ? 'Now' : formatHourlyTime(time)}
+                {index === 0 ? 'Now' : formatHourlyTime(time.time)}
               </div>
               <div className="mb-1">
                 <img
-                  src={getWeatherIcon(weatherCodes[index])}
+                  src={getWeatherIcon(time.weatherCode)}
                   className="w-10 h-10"
                 />
               </div>
               <div className="text-lg font-medium mb-1">
-                {Math.round(temperatures[index])}°C
+                {Math.round(time.temperature)}°C
               </div>
               <div className="text-sm text-blue-600">
-                {precipitationsProb[index]}%
+                {time.precipitationProbability}%
               </div>
             </div>
           ))}
