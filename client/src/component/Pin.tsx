@@ -30,7 +30,13 @@ function Pin({position,eventList}:PinProps) {
                 const eventPosition:[number,number]=[latitude,longitude];
                 return <Marker key={event.id} position={eventPosition}>
                 <Popup>
-                  A pretty CSS3 popup. <br /> Easily customizable.
+                  <>
+                    <img src={event.images[0].url} alt="" />
+                    <h1> <b>{event.name}</b></h1>
+                    <h5>{event._embedded.venues[0].address.line1}</h5>
+                    <h5>{event.distance} km away</h5>
+                    <a href={event.url}>Book now</a>
+                  </>
                 </Popup>
               </Marker>
 
