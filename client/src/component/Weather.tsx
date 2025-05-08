@@ -76,25 +76,44 @@ function Weather({ position }: WeatherProps) {
     }).replace(/\s/g, '').toLowerCase();
   }
 
+  // function getVariableData(hourly: any, index: number): number[] {
+  //   return Array.from(hourly.variables(index)!.valuesArray()!)
+  // }
+
+
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         const responses = await apiService.weatherAPI(position);
         const response = responses[0];
         const utcOffsetSeconds = response.utcOffsetSeconds();
-        const hourly = response.hourly()!;
+        const hour = response.hourly()!;
+
+        console.log(hour)
+
 
         const weatherData: WeatherData = {
           hourly: {
-            time: [...Array((Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval())].map(
-              (_, i) => new Date((Number(hourly.time()) + i * hourly.interval() + utcOffsetSeconds) * 1000)
+            time: [...Array((Number(hour.timeEnd()) - Number(hour.time())) / hour.interval())].map(
+              (_, i) => new Date((Number(hour.time()) + i * hour.interval() + utcOffsetSeconds) * 1000)
             ),
-            temperature2m: Array.from(hourly.variables(0)!.valuesArray()!),
-            weatherCode: Array.from(hourly.variables(1)!.valuesArray()!),
-            precipitationProbability: Array.from(hourly.variables(2)!.valuesArray()!),
+            temperature2m: Array.from(hour.variables(0)!.valuesArray()!),
+            weatherCode: Array.from(hour.variables(1)!.valuesArray()!),
+            precipitationProbability: Array.from(hour.variables(2)!.valuesArray()!),
           },
         };
 
+
+        // const weatherData: WeatherData = {
+        //   hourly: {
+        //     time: [...Array((Number(hour.timeEnd()) - Number(hour.time())) / hour.interval())].map(
+        //       (_, i) => new Date((Number(hour.time()) + i * hour.interval() + utcOffsetSeconds) * 1000)
+        //     ),
+        //     temperature2m: getVariableData(hour, 0),
+        //     weatherCode: getVariableData(hour, 1),
+        //     precipitationProbability: getVariableData(hour, 2),
+        //   },
+        // };
 
         //AI >>>>>
          const now = new Date();
