@@ -10,9 +10,7 @@ function Element({ event }: ElementProps) {
         <div>
           <h1 className="text-xl font-semibold align-middle m-2">{event.name}</h1>
           <h2 className="text-xl font-light align-middle m-2">{event.distance}km away</h2>
-          <a href={event.url}>
-            <h2 className="text-xl font-light align-middle m-2 text-blue-600">Click for more information</h2>
-          </a>
+          <h2 className="text-xl font-light align-middle m-2 text-blue-600 cursor-pointer hover:underline" onClick={() => window.open(event.url)}>Click for more information</h2>
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
   const [position, setPosition] = useState<[number, number]>();
   const [eventList, setEventList] = useState<Event[]>([]);
+  const [mapZoom, setMapZoom] = useState<number>(11);
   
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
@@ -85,6 +86,8 @@ function App() {
                 eventList={eventList}
                 position={position?position:defaultPosition}
                 getPositionAndEvents={getPositionAndEvents}
+                mapZoom={mapZoom}
+                setMapZoom={setMapZoom}
               />
             }
           />
