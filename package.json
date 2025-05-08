@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "openmeteo": "^1.2.0"
+    "openmeteo": "^1.2.0",
+    "react-leaflet-markercluster": "^5.0.0-rc.0"
   }
 }
