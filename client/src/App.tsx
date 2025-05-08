@@ -35,7 +35,7 @@ function App() {
     (async()=>{
       if(position){
         const events = await apiService.searchEvent(position);
-        console.log("events from app: ",events);
+        // console.log("events from app: ",events);
         setEventList(events);
       }
     })();
