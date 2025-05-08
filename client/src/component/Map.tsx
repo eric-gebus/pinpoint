@@ -44,7 +44,7 @@ function Map({
     <>
       {/* search-nav-container */}
       <div className="flex place-content-between p-2 ">
-        {/* search-input */}
+        {/* search-input 
         <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
           <svg
             className="h-[1em] mr-2 opacity-50"
@@ -64,6 +64,7 @@ function Map({
           </svg>
           <input type="search" required placeholder="Search" />
         </label>
+        */}
       </div>
       {/* map-container */}
       <div className="basis-full relative">
