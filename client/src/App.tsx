@@ -100,6 +100,7 @@ function App() {
                 setMapZoom={setMapZoom}
                 setMapCenter={setMapCenter}
                 isLoadingEvents={isLoadingEvents}
+                setPosition={setPosition}
               />
             }
           />

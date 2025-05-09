@@ -4,7 +4,7 @@ export default {
 
   searchEvent: async function (position: [number, number]) {
     try {
-      const response = await fetch('http://localhost:3000/events/search', { //TO UPDATE
+      const response = await fetch('http://localhost:3000/events/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -47,7 +47,39 @@ export default {
       console.log('Error in weatherAPI', error)
       throw error
     }
-  }
+  },
 
+
+  searchAddress: async function (query: string) {
+    try {
+      const params = {
+        q: query,
+        format: 'json',
+        addressdetails: '1',
+        limit: '1'
+      };
+
+      const url = new URL('https://nominatim.openstreetmap.org/search');
+      Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
+      });
+
+      const response = await fetch(url.toString(), {
+        headers: {
+          'User-Agent': 'PinPoints (ericgebus@gmail.com)'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      return await response.json()
+
+
+    } catch (error) {
+      console.log('Error in searchAddress', error)
+      throw error
+    }
+  }
 
 }

@@ -2,6 +2,9 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { Map as LeafletMap } from "leaflet";
 import Pin from "./Pin";
 import { useEffect, useState } from "react";
+import apiService from "../apiService";
+import { useDebounce } from 'use-debounce';
+
 
 interface MapProps {
   position: [number, number];
@@ -12,6 +15,7 @@ interface MapProps {
   setMapZoom: (arg: number) => void;
   setMapCenter: (arg: [number, number]) => void;
   isLoadingEvents: boolean;
+  setPosition: (position: [number, number]) => void
 }
 
 const MAP_KEY = import.meta.env.VITE_MAP_KEY;
@@ -24,11 +28,15 @@ function Map({
   mapCenter,
   setMapZoom,
   setMapCenter,
-  isLoadingEvents
+  isLoadingEvents,
+  setPosition
 }: MapProps) {
 
   const [hasClicked, setHasClicked] = useState<boolean>(false)
+  const [search, setSearch] = useState<string>('');
+  const [debouncedSearch] = useDebounce(search, 500);
 
+  let searchCoord: [number, number]= [0, 0];
   let map: LeafletMap;
   let zoom: number;
   let center: [number, number];
@@ -77,11 +85,26 @@ function Map({
     setHasClicked(true);
   }
 
+
+  async function handleSearch() {
+    const results = await apiService.searchAddress(search)
+    const searchLat = parseFloat(results[0].lat);
+    const searchLong = parseFloat(results[0].lon);
+    searchCoord = [searchLat, searchLong]
+    setPosition(searchCoord)
+
+    map.setView(position, mapZoom, {
+      duration: 1,
+      easeLinearity: 0.25,
+    });
+
+    }
+
   return (
     <>
       {/* search-nav-container */}
       <div className="flex place-content-between p-2 ">
-        {/* search-input
+        {/* search-input */}
         <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
           <svg
             className="h-[1em] mr-2 opacity-50"
@@ -99,9 +122,10 @@ function Map({
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input type="search" required placeholder="Search" />
+          <input type="search" required placeholder="Search" onChange={e => setSearch(e.target.value)} />
         </label>
-        */}
+          <button onClick={handleSearch}>Click me</button>
+
       </div>
       {/* map-container */}
       <div className="basis-full relative">
@@ -147,3 +171,5 @@ function Map({
 }
 
 export default Map;
+
+
