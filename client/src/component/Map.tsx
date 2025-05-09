@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { Map as LeafletMap } from "leaflet";
 import Pin from "./Pin";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface MapProps {
   position: [number, number];
@@ -11,6 +11,7 @@ interface MapProps {
   mapCenter: [number, number];
   setMapZoom: (arg: number) => void;
   setMapCenter: (arg: [number, number]) => void;
+  isLoadingEvents: boolean;
 }
 
 const MAP_KEY = import.meta.env.VITE_MAP_KEY;
@@ -22,8 +23,11 @@ function Map({
   mapZoom,
   mapCenter,
   setMapZoom,
-  setMapCenter
+  setMapCenter,
+  isLoadingEvents
 }: MapProps) {
+
+  const [hasClicked, setHasClicked] = useState<boolean>(false)
 
   let map: LeafletMap;
   let zoom: number;
@@ -47,20 +51,20 @@ function Map({
         map.on("zoom", ({ target }) => {
           zoom = target.getZoom();
         });
-    
+
         map.on("moveend", ({ target }) => {
           const mapCenter = target.getCenter();
           center = [mapCenter.lat, mapCenter.lng];
         });
 
       });
-    
+
       return () => {
         if (zoom) setMapZoom(zoom);
         if (center) setMapCenter(center);
       };
     }, []);
- 
+
     return null;
   }
 
@@ -70,13 +74,14 @@ function Map({
       duration: 1,
       easeLinearity: 0.25,
     });
+    setHasClicked(true);
   }
 
   return (
     <>
       {/* search-nav-container */}
       <div className="flex place-content-between p-2 ">
-        {/* search-input 
+        {/* search-input
         <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
           <svg
             className="h-[1em] mr-2 opacity-50"
@@ -133,6 +138,10 @@ function Map({
           </div>
         </div>
       </div>
+      {
+      (eventList.length == 0 && hasClicked === true && isLoadingEvents === false) &&
+      <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 text-lg font-small">No available events in your area</h1>
+      }
     </>
   );
 }
