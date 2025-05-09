@@ -45,11 +45,12 @@ export async function searchEvents(req:Request,res:Response){
        res.status(404).send("Latitude and/or longitude was not provided");
        return;
     }
-    const key=process.env.API_KEY!;
+    const key = process.env.API_KEY!;
     const { startUtc, endUtc } = getTodayUtcRange();
     const queryParamsDict: { [key: string]: string } = {
      apikey: key,
      latlong: `${latitude},${longitude}`,
+     locale: "*",
      unit: "km",
      size: "200",
      sort: "distance,asc",

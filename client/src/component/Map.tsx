@@ -1,16 +1,16 @@
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { Map as LeafletMap } from "leaflet";
 import Pin from "./Pin";
+import { useEffect } from "react";
 
 interface MapProps {
   position: [number, number];
   eventList: Event[];
-  getPositionAndEvents: () => void;
+  getPositionAndEvents: () => Promise<void>;
   mapZoom: number;
+  mapCenter: [number, number];
   setMapZoom: (arg: number) => void;
-}
-
-interface ChangeViewProps {
-  center: [number, number];
+  setMapCenter: (arg: [number, number]) => void;
 }
 
 const MAP_KEY = import.meta.env.VITE_MAP_KEY;
@@ -20,24 +20,56 @@ function Map({
   getPositionAndEvents,
   eventList,
   mapZoom,
+  mapCenter,
   setMapZoom,
+  setMapCenter
 }: MapProps) {
-  function ChangeView({ center }: ChangeViewProps) {
-    const map = useMap();
-    const mapCenter = map.getCenter();
-    if (mapCenter.lat === 51.505) {
-      console.log("set");
-      map.setView(center, mapZoom, {
-        duration: 1,
-        easeLinearity: 0.25,
+
+  let map: LeafletMap;
+  let zoom: number;
+  let center: [number, number];
+
+  function ChangeView() {
+
+    map = useMap();
+
+    useEffect(() => {
+      map.whenReady(() => {
+
+        const mapCenter = map.getCenter();
+        if (mapCenter.lat === 51.505) {
+          map.setView(position, mapZoom, {
+            duration: 1,
+            easeLinearity: 0.25,
+          });
+        }
+
+        map.on("zoom", ({ target }) => {
+          zoom = target.getZoom();
+        });
+    
+        map.on("moveend", ({ target }) => {
+          const mapCenter = target.getCenter();
+          center = [mapCenter.lat, mapCenter.lng];
+        });
+
       });
-    }
-    map.addEventListener("zoom", ({ target }) => setMapZoom(target._zoom));
-    map.setView(map.getCenter(), mapZoom, {
+    
+      return () => {
+        if (zoom) setMapZoom(zoom);
+        if (center) setMapCenter(center);
+      };
+    }, []);
+ 
+    return null;
+  }
+
+  async function onGetPositionClick() {
+    await getPositionAndEvents();
+    map.setView(position, mapZoom, {
       duration: 1,
       easeLinearity: 0.25,
     });
-    return null;
   }
 
   return (
@@ -71,8 +103,8 @@ function Map({
         <div className="m-3 overflow-hidden rounded-xl shadow-lg/50 relative">
           {
             <MapContainer
-              center={position}
-              zoom={13}
+              center={mapCenter}
+              zoom={mapZoom}
               scrollWheelZoom={true}
               style={{ height: "55vh", width: "100vw" }}
             >
@@ -83,7 +115,7 @@ function Map({
                 minZoom={1}
                 attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
               />
-              <ChangeView center={position} />
+              <ChangeView/>
               <Pin position={position} eventList={eventList} />
             </MapContainer>
           }
@@ -94,7 +126,7 @@ function Map({
           >
             <button
               className="group p-[4px] rounded-[12px] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
-              onClick={getPositionAndEvents}
+              onClick={onGetPositionClick}
             >
               <img src="gps.png" alt="Get Position" className="h-10 w-10" />
             </button>
