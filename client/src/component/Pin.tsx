@@ -13,7 +13,7 @@ const myIcon = new L.Icon({
     popupAnchor:  [-0, -0],
     iconSize: [30,42],
     shadowSize:[50, 64],
-    
+
 });
 
 interface PinProps{
@@ -48,11 +48,11 @@ function Pin({position,eventList}:PinProps) {
             })
         }
       </MarkerClusterGroup>
-        {      
-          eventList.length>0&&
+        {
+          eventList.length>=0&&
           <Marker position={position} icon={myIcon}>
               <Popup>
-                You are here! <br /> 
+                You are here! <br />
               </Popup>
           </Marker>
         }

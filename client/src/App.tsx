@@ -25,19 +25,27 @@ function App() {
   const [eventList, setEventList] = useState<Event[]>([]);
   const [mapZoom, setMapZoom] = useState<number>(11);
   const [mapCenter, setMapCenter] = useState<[number, number]>(defaultPosition);
-  
+  const [isLoadingEvents, setIsLoadingEvents] = useState(false);
+
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 0,
   };
 
-  useEffect(()=>{
-    (async()=>{
-      if(position){
-        const events = await apiService.searchEvent(position);
-        // console.log("events from app: ",events);
-        setEventList(events);
+  useEffect(() => {
+    (async () => {
+      if (position) {
+        setIsLoadingEvents(true);
+        try {
+          const events = await apiService.searchEvent(position);
+          setEventList(events);
+        } catch (error) {
+          console.error("Error fetching events:", error);
+          setEventList([]);
+        } finally {
+          setIsLoadingEvents(false);
+        }
       }
     })();
   }, [position]);
@@ -91,6 +99,7 @@ function App() {
                 mapCenter={mapCenter}
                 setMapZoom={setMapZoom}
                 setMapCenter={setMapCenter}
+                isLoadingEvents={isLoadingEvents}
               />
             }
           />
