@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
 import Map from "./component/Map.tsx";
@@ -18,6 +23,8 @@ function App() {
   const defaultPosition: [number, number] = [51.505, -0.09];
   const [position, setPosition] = useState<[number, number]>();
   const [eventList, setEventList] = useState<Event[]>([]);
+  const [mapZoom, setMapZoom] = useState<number>(11);
+  const [mapCenter, setMapCenter] = useState<[number, number]>(defaultPosition);
   
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
@@ -29,12 +36,11 @@ function App() {
     (async()=>{
       if(position){
         const events = await apiService.searchEvent(position);
-        console.log("events from app: ",events);
+        // console.log("events from app: ",events);
         setEventList(events);
       }
     })();
-  },[position])
-
+  }, [position]);
 
   async function getPositionAndEvents() {
     try {
@@ -81,12 +87,17 @@ function App() {
                 eventList={eventList}
                 position={position?position:defaultPosition}
                 getPositionAndEvents={getPositionAndEvents}
+                mapZoom={mapZoom}
+                mapCenter={mapCenter}
+                setMapZoom={setMapZoom}
+                setMapCenter={setMapCenter}
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList}/>} />
+          <Route path="/list" element={<List eventList={eventList} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
+        <Navbar/>
       </Router>
     </>
   );

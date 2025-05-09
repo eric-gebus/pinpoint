@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import apiService from "../apiService";
 import sun from "../assets/weather_icons/sun.png";
-import cloudy from "../assets/weather_icons/partial_cloud.png";
-import overcast from "../assets/weather_icons/cloudy.png";
+import cloudy from "../assets/weather_icons/cloudy.png";
+import overcast from "../assets/weather_icons/overcast.png";
 import fog from "../assets/weather_icons/fog.png";
-import light_rain from "../assets/weather_icons/rain.png";
-import rain from "../assets/weather_icons/moderate_rain.png";
-import heavy_rain from "../assets/weather_icons/heavy-rain.png";
-import snow from "../assets/weather_icons/snowflake.png";
-import thunder from "../assets/weather_icons/thunderstorm.png";
+import light_rain from "../assets/weather_icons/light_rain.png";
+import rain from "../assets/weather_icons/rain.png";
+import heavy_rain from "../assets/weather_icons/heavy_rain.png";
+import snow from "../assets/weather_icons/snow.png";
+import thunder from "../assets/weather_icons/thunder.png";
 import { MdChevronLeft, MdChevronRight} from 'react-icons/md'
 
 interface WeatherProps {
@@ -160,7 +160,6 @@ function Weather({ position }: WeatherProps) {
 
   return (
     <div className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md shadow-xl max-w-full">
-    <h3 className="text-lg font-semibold mb-3 text-center">Weather Forecast</h3>
     <div className='relative flex items-center'>
       <MdChevronLeft className="opacity-50 cursor-pointer hover:opacity-100" onClick={slideLeft} size={40} />
       <div id ='slider' className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide no-scrollbar">

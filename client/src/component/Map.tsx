@@ -1,40 +1,82 @@
-import { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { Map as LeafletMap } from "leaflet";
 import Pin from "./Pin";
-
+import { useEffect } from "react";
 
 interface MapProps {
   position: [number, number];
-  eventList:Event[];
-  getPositionAndEvents: () => void;
+  eventList: Event[];
+  getPositionAndEvents: () => Promise<void>;
+  mapZoom: number;
+  mapCenter: [number, number];
+  setMapZoom: (arg: number) => void;
+  setMapCenter: (arg: [number, number]) => void;
 }
 
-interface ChangeViewProps {
-  center: [number, number];
-  zoom: number;
-}
+const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
-function Map({ position, getPositionAndEvents, eventList }: MapProps) {
-  const MAP_KEY = import.meta.env.VITE_MAP_KEY;
+function Map({
+  position,
+  getPositionAndEvents,
+  eventList,
+  mapZoom,
+  mapCenter,
+  setMapZoom,
+  setMapCenter
+}: MapProps) {
 
-  function ChangeView({ center, zoom }: ChangeViewProps) {
-    const map = useMap();
+  let map: LeafletMap;
+  let zoom: number;
+  let center: [number, number];
+
+  function ChangeView() {
+
+    map = useMap();
+
     useEffect(() => {
-      if (center) {
-        map.setView(center, zoom, {
-          duration: 1,
-          easeLinearity: 0.25,
+      map.whenReady(() => {
+
+        const mapCenter = map.getCenter();
+        if (mapCenter.lat === 51.505) {
+          map.setView(position, mapZoom, {
+            duration: 1,
+            easeLinearity: 0.25,
+          });
+        }
+
+        map.on("zoom", ({ target }) => {
+          zoom = target.getZoom();
         });
-      }
-    }, [center, zoom, map]);
+    
+        map.on("moveend", ({ target }) => {
+          const mapCenter = target.getCenter();
+          center = [mapCenter.lat, mapCenter.lng];
+        });
+
+      });
+    
+      return () => {
+        if (zoom) setMapZoom(zoom);
+        if (center) setMapCenter(center);
+      };
+    }, []);
+ 
     return null;
+  }
+
+  async function onGetPositionClick() {
+    await getPositionAndEvents();
+    map.setView(position, mapZoom, {
+      duration: 1,
+      easeLinearity: 0.25,
+    });
   }
 
   return (
     <>
       {/* search-nav-container */}
       <div className="flex place-content-between p-2 ">
-        {/* search-input */}
+        {/* search-input 
         <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
           <svg
             className="h-[1em] mr-2 opacity-50"
@@ -54,39 +96,41 @@ function Map({ position, getPositionAndEvents, eventList }: MapProps) {
           </svg>
           <input type="search" required placeholder="Search" />
         </label>
-        {/* button-container */}
-        <div className="bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
-          <button
-            className="group p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
-            onClick={getPositionAndEvents}
-          >
-            <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-2 py-2">
-              <div className="flex gap-2 items-center">
-                <span className="font-semibold">Get my position</span>
-              </div>
-            </div>
-          </button>
-        </div>
+        */}
       </div>
       {/* map-container */}
-      <div className="basis-full">
-        <div className="m-3 overflow-hidden rounded-xl shadow-lg/50">
-          <MapContainer
-          center={position}
-          zoom={13}
-          scrollWheelZoom={true}
-          style={{ minHeight: "600px", minWidth: "400px" }}
+      <div className="basis-full relative">
+        <div className="m-3 overflow-hidden rounded-xl shadow-lg/50 relative">
+          {
+            <MapContainer
+              center={mapCenter}
+              zoom={mapZoom}
+              scrollWheelZoom={true}
+              style={{ height: "55vh", width: "100vw" }}
+            >
+              <TileLayer
+                url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
+                tileSize={512}
+                zoomOffset={-1}
+                minZoom={1}
+                attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+              />
+              <ChangeView/>
+              <Pin position={position} eventList={eventList} />
+            </MapContainer>
+          }
+          {/* Button container */}
+          <div
+            className="absolute bottom-4 right-1 p-[4px] rounded-[16px]"
+            style={{ zIndex: 1000 }}
           >
-          <TileLayer
-            url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
-            tileSize={512}
-            zoomOffset={-1}
-            minZoom={1}
-            attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-          />
-        <ChangeView center={position} zoom={11} />
-        <Pin position={position} eventList={eventList}/>
-      </MapContainer>
+            <button
+              className="group p-[4px] rounded-[12px] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
+              onClick={onGetPositionClick}
+            >
+              <img src="gps.png" alt="Get Position" className="h-10 w-10" />
+            </button>
+          </div>
         </div>
       </div>
     </>
