@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import apiService from "../apiService";
-import sun from "../assets/weather_icons/sun.png";
-import cloudy from "../assets/weather_icons/cloudy.png";
-import overcast from "../assets/weather_icons/overcast.png";
-import fog from "../assets/weather_icons/fog.png";
-import light_rain from "../assets/weather_icons/light_rain.png";
-import rain from "../assets/weather_icons/rain.png";
-import heavy_rain from "../assets/weather_icons/heavy_rain.png";
-import snow from "../assets/weather_icons/snow.png";
-import thunder from "../assets/weather_icons/thunder.png";
 import { MdChevronLeft, MdChevronRight} from 'react-icons/md'
+import type { VariablesWithTime } from '@openmeteo/sdk/variables-with-time'
 
 interface WeatherProps {
   position: [number, number];
@@ -33,6 +25,18 @@ interface HourlyWeather {
 
 function Weather({ position }: WeatherProps) {
   const [hourlyWeather, setHourlyWeather] = useState<HourlyWeather[]>([])
+
+  const sun = "/weather_icons/sun.png"
+  const cloudy = "/weather_icons/cloudy.png"
+  const cloudy_night = "/weather_icons/cloudy_night.png"
+  const moon = "/weather_icons/new-moon.png"
+  const overcast = "/weather_icons/overcast.png"
+  const fog = "/weather_icons/fog.png"
+  const light_rain = "/weather_icons/light_rain.png"
+  const rain = "/weather_icons/rain.png"
+  const heavy_rain = "/weather_icons/heavy_rain.png"
+  const snow = "/weather_icons/snow.png"
+  const thunder = "/weather_icons/thunder.png"
 
   const icons: { [key: number]: string } = {
     0: sun,
@@ -65,7 +69,19 @@ function Weather({ position }: WeatherProps) {
     99: thunder,
   };
 
-  function getWeatherIcon(code: number) {
+  function getWeatherIcon(code: number, date: Date) {
+    const hour = date.getHours()
+
+    const isNightTime = hour >= 21 || hour < 6;
+
+    if (code === 0 && isNightTime) {
+      return moon
+    }
+
+    if ((code === 1 || code === 2) && isNightTime) {
+      return cloudy_night
+    }
+
     return icons[code] || sun;
   }
 
@@ -76,9 +92,9 @@ function Weather({ position }: WeatherProps) {
     }).replace(/\s/g, '').toLowerCase();
   }
 
-  // function getVariableData(hourly: any, index: number): number[] {
-  //   return Array.from(hourly.variables(index)!.valuesArray()!)
-  // }
+  function getVariableData(hourly: VariablesWithTime, index: number): number[] {
+    return Array.from(hourly.variables(index)!.valuesArray()!)
+  }
 
 
   useEffect(() => {
@@ -89,31 +105,16 @@ function Weather({ position }: WeatherProps) {
         const utcOffsetSeconds = response.utcOffsetSeconds();
         const hour = response.hourly()!;
 
-        console.log(hour)
-
-
         const weatherData: WeatherData = {
           hourly: {
             time: [...Array((Number(hour.timeEnd()) - Number(hour.time())) / hour.interval())].map(
               (_, i) => new Date((Number(hour.time()) + i * hour.interval() + utcOffsetSeconds) * 1000)
             ),
-            temperature2m: Array.from(hour.variables(0)!.valuesArray()!),
-            weatherCode: Array.from(hour.variables(1)!.valuesArray()!),
-            precipitationProbability: Array.from(hour.variables(2)!.valuesArray()!),
+            temperature2m: getVariableData(hour, 0),
+            weatherCode: getVariableData(hour, 1),
+            precipitationProbability: getVariableData(hour, 2),
           },
         };
-
-
-        // const weatherData: WeatherData = {
-        //   hourly: {
-        //     time: [...Array((Number(hour.timeEnd()) - Number(hour.time())) / hour.interval())].map(
-        //       (_, i) => new Date((Number(hour.time()) + i * hour.interval() + utcOffsetSeconds) * 1000)
-        //     ),
-        //     temperature2m: getVariableData(hour, 0),
-        //     weatherCode: getVariableData(hour, 1),
-        //     precipitationProbability: getVariableData(hour, 2),
-        //   },
-        // };
 
         //AI >>>>>
          const now = new Date();
@@ -171,7 +172,7 @@ function Weather({ position }: WeatherProps) {
               </div>
               <div className="mb-1">
                 <img
-                  src={getWeatherIcon(time.weatherCode)}
+                  src={getWeatherIcon(time.weatherCode, time.time)}
                   className="w-10 h-10"
                 />
               </div>
