@@ -79,18 +79,31 @@ export async function searchEvents(req:Request,res:Response){
 }
 
 export async function favoriteEvent(req:Request,res:Response){
-  const {name,url,image,address,distance,startDate,endDate}=req.body;
+  const {name,id,url,image,address,distance,startDate,endDate}=req.body;
   const event=new EventModel({
     name,
+    id,
     url,
     image,
     address,
     distance,
     startDate,
-    endDate
   })
   await event.save();
   res.json("saved meeh");
+}
+
+export async function favoriteEventList(req:Request,res:Response){
+  console.log("reached server fav event");
+  try {
+    const favoriteEventList=await EventModel.find();
+    res.setHeader("Content-Type", "application/json");
+    res.send(favoriteEventList);
+  } catch (err) {
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode = 400;
+    res.send({ error: `${err}` });
+   }
 }
 
 // GET localhost:3000/events/search?latitude=40.7128&longitude=74.0060&keyword=dogs
