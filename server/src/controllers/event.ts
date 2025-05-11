@@ -106,4 +106,10 @@ export async function favoriteEventList(req:Request,res:Response){
    }
 }
 
+export async function removeFavoriteEvent(req:Request,res:Response){
+  const id=req.params.id;
+  await EventModel.deleteOne({id:id});
+  res.json(`deleted ${id}`);
+}
+
 // GET localhost:3000/events/search?latitude=40.7128&longitude=74.0060&keyword=dogs

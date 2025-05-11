@@ -36,13 +36,18 @@ function Pin({position,eventList}:PinProps) {
 
   function toggleFavorite(event:Event){
     console.log("fav clicked");
-    if(event.isFavorite===false){
+    const updatedEvent = { ...event }; 
+    if(!favoriteEvents.some(fav => fav.id === updatedEvent.id)){
+      event.isFavorite=true;
       apiService.favoriteEvent(event);
       setFavoriteEvents([...favoriteEvents,event]);
-      // event.isFavorite=true;
     }else{
-      // event.isFavorite=false;
+      event.isFavorite=false;
       apiService.removeFavoriteEvent(event);
+      const updatedFavoriteList=favoriteEvents.filter((favEvent)=>{
+        return favEvent.id !==event.id
+      })
+      setFavoriteEvents(updatedFavoriteList);
     }
     // setFavoriteEvent(true);
   }

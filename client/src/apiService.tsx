@@ -86,34 +86,26 @@ export default {
 
   removeFavoriteEvent:async function(event:Event){
     console.log("api-remove favoritee event");
-    // try {
-    //   const response = await fetch('http://localhost:3000/events/favorite', { 
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //       name:event.name,
-    //       url:event.url,
-    //       image:event.images[0].url,
-    //       address:event._embedded.venues[0].address?.line1,
-    //       distance:event._embedded.venues[0].distance,
-    //       startDate:event.dates.start?.localDate
-    //     })
-    //   })
+    try {
+      const response = await fetch(`http://localhost:3000/events/removeFavoriteEvent/${event.id}`, { 
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
 
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error status: ${response.status}`)
-    //   }
+      if (!response.ok) {
+        throw new Error(`HTTP error status: ${response.status}`)
+      }
 
-    //   const data = await response.json();
-    //   console.log("favorite response: ",data);
-    //   return data;
+      const data = await response.json();
+      console.log("delete fav response: ",data);
+      return data;
 
-    // } catch (error) {
-    //   console.log('Error in favoriteEvent', error)
-    //   throw error
-    // }
+    } catch (error) {
+      console.log('Error in delete fav event', error)
+      throw error
+    }
 
   },
   getFavoriteEvents:async function(){
