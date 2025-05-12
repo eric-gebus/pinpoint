@@ -4,6 +4,9 @@ import Pin from "./Pin";
 import { useEffect, useState } from "react";
 import apiService from "../apiService";
 import { useDebounce } from 'use-debounce';
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 
 interface MapProps {
@@ -35,6 +38,7 @@ function Map({
   const [hasClicked, setHasClicked] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('');
   const [debouncedSearch] = useDebounce(search, 500);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   let searchCoord: [number, number]= [0, 0];
   let map: LeafletMap;
@@ -127,6 +131,15 @@ function Map({
           <button onClick={handleSearch}>Click me</button>
 
       </div>
+      <div className="p-4">
+          <h2 className="text-lg font-semibold mb-2">Select a Date:</h2>
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="dd MMM, yyyy"
+            className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2"
+          />
+        </div>
       {/* map-container */}
       <div className="basis-full relative">
         <div className="m-3 overflow-hidden rounded-xl shadow-lg/50 relative">
@@ -135,7 +148,8 @@ function Map({
               center={mapCenter}
               zoom={mapZoom}
               scrollWheelZoom={true}
-              style={{ height: "55vh", width: "100vw" }}
+              style={{ height: "55vh", width: "100vw", zIndex: 0 }}
+              
             >
               <TileLayer
                 url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
