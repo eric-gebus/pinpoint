@@ -7,7 +7,6 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-
 interface MapProps {
   position: [number, number];
   eventList: Event[];
@@ -37,12 +36,10 @@ function Map({
   setSelectedDate,
   selectedDate,
 }: MapProps) {
-
-  const [hasClicked, setHasClicked] = useState<boolean>(false)
-  const [datePicker, setDatePicker] = useState<Date>(selectedDate)
-  const mapRef = useRef<LeafletMap>(null)
+  const [hasClicked, setHasClicked] = useState<boolean>(false);
+  const [datePicker, setDatePicker] = useState<Date>(selectedDate);
+  const mapRef = useRef<LeafletMap>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
 
   function ChangeView() {
     const map = useMap();
@@ -52,8 +49,8 @@ function Map({
 
       const onMove = () => {
         const center = map.getCenter();
-        setMapCenter([center.lat, center.lng])
-      }
+        setMapCenter([center.lat, center.lng]);
+      };
 
       const onZoom = () => {
         setMapZoom(map.getZoom());
@@ -64,13 +61,12 @@ function Map({
 
       return () => {
         map.off("moveend", onMove);
-        map.off("zoomend", onZoom)
-      }
+        map.off("zoomend", onZoom);
+      };
     }, [map]);
 
     return null;
   }
-
 
   useEffect(() => {
     if (mapRef.current) {
@@ -78,23 +74,21 @@ function Map({
     }
   }, [position, mapZoom]);
 
-
-
   async function onGetPositionClick() {
     await getPositionAndEvents();
-     if (mapRef.current) {
+    if (mapRef.current) {
       mapRef.current.setView(position, mapZoom);
     }
     setHasClicked(true);
   }
 
-
   const handleSearch = () => {
     const searchValue = searchInputRef.current?.value.trim();
     if (!searchValue) return;
 
-    apiService.searchAddress(searchValue)
-      .then(results => {
+    apiService
+      .searchAddress(searchValue)
+      .then((results) => {
         const searchLat = parseFloat(results[0].lat);
         const searchLong = parseFloat(results[0].lon);
         const searchCoord: [number, number] = [searchLat, searchLong];
@@ -107,11 +101,10 @@ function Map({
           easeLinearity: 0.25,
         });
 
-        setSelectedDate(datePicker)
+        setSelectedDate(datePicker);
       })
       .catch(console.error);
   };
-
 
   return (
     <>
@@ -140,13 +133,12 @@ function Map({
             required
             placeholder="Search"
             ref={searchInputRef}
-            defaultValue="" />
+            defaultValue=""
+          />
         </label>
-          <button onClick={handleSearch}>Click me</button>
-
-      </div>
-      <div className="p-4">
-          <h2 className="text-lg font-semibold mb-2">Select a Date:</h2>
+        {/* calendar */}
+        <div className="flex">
+          <img src="calendar.svg" width={20}/>
           <DatePicker
             selected={selectedDate}
             onChange={(date) => {
@@ -155,9 +147,12 @@ function Map({
               }
             }}
             dateFormat="dd MMM, yyyy"
-            className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2"
+            calendarStartDay={1}
+            className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2 ml-2"
           />
         </div>
+        <button className="rounded-[16px] bg-white p-2" onClick={handleSearch}>Explore</button>
+      </div>
       {/* map-container */}
       <div className="basis-full relative">
         <div className="m-3 overflow-hidden rounded-xl shadow-lg/50 relative">
@@ -167,7 +162,6 @@ function Map({
               zoom={mapZoom}
               scrollWheelZoom={true}
               style={{ height: "55vh", width: "100vw", zIndex: 0 }}
-
             >
               <TileLayer
                 url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
@@ -194,14 +188,15 @@ function Map({
           </div>
         </div>
       </div>
-      {
-      (eventList.length == 0 && hasClicked === true && isLoadingEvents === false) &&
-      <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 text-lg font-small">No available events in your area</h1>
-      }
+      {eventList.length == 0 &&
+        hasClicked === true &&
+        isLoadingEvents === false && (
+          <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 text-lg font-small">
+            No available events in your area
+          </h1>
+        )}
     </>
   );
 }
 
 export default Map;
-
-
