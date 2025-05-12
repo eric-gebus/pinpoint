@@ -50,7 +50,6 @@ export default {
     }
   },
 
-
   searchAddress: async function (query: string) {
     try {
       const params = {
@@ -69,18 +68,102 @@ export default {
         headers: {
           'User-Agent': 'PinPoints (ericgebus@gmail.com)'
         }
-      })
+      });
 
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }
-      return await response.json()
-
+      return await response.json();
 
     } catch (error) {
       console.log('Error in searchAddress', error)
       throw error
     }
-  }
+  },
 
+
+  favoriteEvent: async function(event:Event){
+    console.log("from api service -favoritee event");
+    console.log("event : ",event);
+    try {
+      const response = await fetch('http://localhost:3000/events/favorite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name:event.name,
+          id:event.id,
+          url:event.url,
+          image:event.images[0].url,
+          address:event._embedded.venues[0].address?.line1,
+          distance:event._embedded.venues[0].distance,
+          startDate:event.dates.start?.localDate
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error status: ${response.status}`)
+      }
+
+      const data = await response.json();
+      console.log("favorite response: ",data);
+      return data;
+
+    } catch (error) {
+      console.log('Error in favoriteEvent', error)
+      throw error
+    }
+  },
+
+
+  removeFavoriteEvent: async function(event:Event){
+    console.log("api-remove favoritee event");
+    try {
+      const response = await fetch(`http://localhost:3000/events/removeFavoriteEvent/${event.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+
+        throw new Error(`HTTP error status: ${response.status}`)
+      }
+
+      const data = await response.json();
+      console.log("delete fav response: ",data);
+      return data;
+
+    } catch (error) {
+      console.log('Error in delete fav event', error)
+      throw error
+    }
+  },
+
+
+  getFavoriteEvents: async function(){
+    console.log("from api service -favoritee event list");
+    try {
+      const response = await fetch('http://localhost:3000/events/favoriteEvents', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error status: ${response.status}`)
+      }
+
+      const data = await response.json();
+      console.log("favorite event list: ",data);
+      return data;
+
+    } catch (error) {
+      console.log('Error in favoriteEvent list', error)
+      throw error
+    }
+  }
 }

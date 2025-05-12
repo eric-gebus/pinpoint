@@ -14,6 +14,8 @@ interface MapProps {
   mapZoom: number;
   mapCenter: [number, number];
   setMapZoom: (arg: number) => void;
+  favoriteEvents:Event[];
+  toggleFavorite: (event:Event) => void
   setMapCenter: (arg: [number, number]) => void;
   isLoadingEvents: boolean;
   setPosition: (position: [number, number]) => void;
@@ -35,6 +37,8 @@ function Map({
   setPosition,
   setSelectedDate,
   selectedDate,
+  favoriteEvents,
+  toggleFavorite
 }: MapProps) {
   const [hasClicked, setHasClicked] = useState<boolean>(false);
   const [datePicker, setDatePicker] = useState<Date>(selectedDate);
@@ -170,8 +174,8 @@ function Map({
                 minZoom={1}
                 attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
               />
-              <ChangeView />
-              <Pin position={position} eventList={eventList} />
+              <ChangeView/>
+              <Pin position={position} eventList={eventList} favoriteEvents={favoriteEvents} toggleFavorite={toggleFavorite} />
             </MapContainer>
           }
           {/* Button container */}
