@@ -1,9 +1,8 @@
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { Map as LeafletMap } from "leaflet";
 import Pin from "./Pin";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import apiService from "../apiService";
-import { useDebouncedCallback } from 'use-debounce';
 
 
 interface MapProps {
@@ -33,17 +32,17 @@ function Map({
 }: MapProps) {
 
   const [hasClicked, setHasClicked] = useState<boolean>(false)
-  const [search, setSearch] = useState<string>('');
-
-  let map: LeafletMap;
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const mapRef = useRef<LeafletMap>(null)
   let zoom: number;
   let center: [number, number];
 
   function ChangeView() {
 
-    map = useMap();
+    const map = useMap();
 
     useEffect(() => {
+      mapRef.current = map;
       map.whenReady(() => {
 
         const mapCenter = map.getCenter();
@@ -76,52 +75,36 @@ function Map({
 
   async function onGetPositionClick() {
     await getPositionAndEvents();
-    map.setView(position, mapZoom, {
+    mapRef.current?.setView(position, mapZoom, {
       duration: 1,
       easeLinearity: 0.25,
     });
     setHasClicked(true);
   }
 
-  const handleDebouncedSearch = useCallback((search: string) => {
-    if (!search.trim()) return;
 
-    apiService.searchAddress(search)
+  const handleSearch = () => {
+    const searchValue = searchInputRef.current?.value.trim();
+    if (!searchValue) return;
+
+    apiService.searchAddress(searchValue)
       .then(results => {
-        const searchLat: number = parseFloat(results[0].lat);
-        const searchLong: number = parseFloat(results[0].lon);
+        const searchLat = parseFloat(results[0].lat);
+        const searchLong = parseFloat(results[0].lon);
         const searchCoord: [number, number] = [searchLat, searchLong];
 
         if (position[0] !== searchCoord[0] || position[1] !== searchCoord[1]) {
           setPosition(searchCoord);
         }
 
-        map.setView(searchCoord, mapZoom, {
+        mapRef.current?.setView(searchCoord, mapZoom, {
           duration: 1,
           easeLinearity: 0.25,
         });
       })
-      .catch(error => {
-        console.error("Search failed:", error);
-      })
-  }, [map, mapZoom]);
-
-
-  const debouncedSearch = useDebouncedCallback(handleDebouncedSearch, 500);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+      .catch(console.error);
   };
 
-  const handleSearch = () => {
-    if (search.trim()) {
-      debouncedSearch(search);
-    }
-  };
-
-    useEffect(() => {
-    return () => debouncedSearch.cancel();
-  }, [debouncedSearch]);
 
   return (
     <>
@@ -145,7 +128,11 @@ function Map({
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input type="search" required placeholder="Search" value={search} onChange={handleInputChange} />
+          <input  type="search"
+            required
+            placeholder="Search"
+            ref={searchInputRef}
+            defaultValue="" />
         </label>
           <button onClick={handleSearch}>Click me</button>
 
