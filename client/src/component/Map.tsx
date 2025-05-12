@@ -22,6 +22,11 @@ interface MapProps {
   selectedDate: Date;
 }
 
+interface ChangeViewProp {
+  position: [number, number];
+  zoom: number;
+}
+
 const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
 function Map({
@@ -42,51 +47,49 @@ function Map({
   const [datePicker, setDatePicker] = useState<Date>(selectedDate)
   const mapRef = useRef<LeafletMap>(null)
   const searchInputRef = useRef<HTMLInputElement>(null);
-  let zoom: number;
-  let center: [number, number];
+
 
   function ChangeView() {
-
     const map = useMap();
 
     useEffect(() => {
       mapRef.current = map;
-      map.whenReady(() => {
 
-        const mapCenter = map.getCenter();
-        if (mapCenter.lat === 51.505) {
-          map.setView(position, mapZoom, {
-            duration: 1,
-            easeLinearity: 0.25,
-          });
-        }
+      const onMove = () => {
+        const center = map.getCenter();
+        setMapCenter([center.lat, center.lng])
+      }
 
-        map.on("zoom", ({ target }) => {
-          zoom = target.getZoom();
-        });
+      const onZoom = () => {
+        setMapZoom(map.getZoom());
+      };
 
-        map.on("moveend", ({ target }) => {
-          const mapCenter = target.getCenter();
-          center = [mapCenter.lat, mapCenter.lng];
-        });
-
-      });
+      map.on("moveend", onMove);
+      map.on("zoomend", onZoom);
 
       return () => {
-        if (zoom) setMapZoom(zoom);
-        if (center) setMapCenter(center);
-      };
-    }, [position]);
+        map.off("moveend", onMove);
+        map.off("zoomend", onZoom)
+      }
+    }, [map]);
 
     return null;
   }
+  
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setView(position, mapZoom);
+    }
+  }, [position, mapZoom]);
+
+
 
   async function onGetPositionClick() {
     await getPositionAndEvents();
-    mapRef.current?.setView(position, mapZoom, {
-      duration: 1,
-      easeLinearity: 0.25,
-    });
+     if (mapRef.current) {
+      mapRef.current.setView(position, mapZoom);
+    }
     setHasClicked(true);
   }
 
@@ -178,7 +181,7 @@ function Map({
                 minZoom={1}
                 attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
               />
-              <ChangeView/>
+              <ChangeView />
               <Pin position={position} eventList={eventList} />
             </MapContainer>
           }
