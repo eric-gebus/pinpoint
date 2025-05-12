@@ -1,9 +1,8 @@
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { Map as LeafletMap } from "leaflet";
 import Pin from "./Pin";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import apiService from "../apiService";
-import { useDebounce } from 'use-debounce';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -36,20 +35,18 @@ function Map({
 }: MapProps) {
 
   const [hasClicked, setHasClicked] = useState<boolean>(false)
-  const [search, setSearch] = useState<string>('');
-  const [debouncedSearch] = useDebounce(search, 500);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const mapRef = useRef<LeafletMap>(null)
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-
-  let searchCoord: [number, number]= [0, 0];
-  let map: LeafletMap;
   let zoom: number;
   let center: [number, number];
 
   function ChangeView() {
 
-    map = useMap();
+    const map = useMap();
 
     useEffect(() => {
+      mapRef.current = map;
       map.whenReady(() => {
 
         const mapCenter = map.getCenter();
@@ -82,7 +79,7 @@ function Map({
 
   async function onGetPositionClick() {
     await getPositionAndEvents();
-    map.setView(position, mapZoom, {
+    mapRef.current?.setView(position, mapZoom, {
       duration: 1,
       easeLinearity: 0.25,
     });
@@ -90,19 +87,28 @@ function Map({
   }
 
 
-  async function handleSearch() {
-    const results = await apiService.searchAddress(search)
-    const searchLat = parseFloat(results[0].lat);
-    const searchLong = parseFloat(results[0].lon);
-    searchCoord = [searchLat, searchLong]
-    setPosition(searchCoord)
+  const handleSearch = () => {
+    const searchValue = searchInputRef.current?.value.trim();
+    if (!searchValue) return;
 
-    map.setView(position, mapZoom, {
-      duration: 1,
-      easeLinearity: 0.25,
-    });
+    apiService.searchAddress(searchValue)
+      .then(results => {
+        const searchLat = parseFloat(results[0].lat);
+        const searchLong = parseFloat(results[0].lon);
+        const searchCoord: [number, number] = [searchLat, searchLong];
 
-    }
+        if (position[0] !== searchCoord[0] || position[1] !== searchCoord[1]) {
+          setPosition(searchCoord);
+        }
+
+        mapRef.current?.setView(searchCoord, mapZoom, {
+          duration: 1,
+          easeLinearity: 0.25,
+        });
+      })
+      .catch(console.error);
+  };
+
 
   return (
     <>
@@ -126,7 +132,11 @@ function Map({
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input type="search" required placeholder="Search" onChange={e => setSearch(e.target.value)} />
+          <input  type="search"
+            required
+            placeholder="Search"
+            ref={searchInputRef}
+            defaultValue="" />
         </label>
           <button onClick={handleSearch}>Click me</button>
 
