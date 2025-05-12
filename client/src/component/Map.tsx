@@ -42,6 +42,7 @@ function Map({
 }: MapProps) {
   const [hasClicked, setHasClicked] = useState<boolean>(false);
   const [datePicker, setDatePicker] = useState<Date>(selectedDate);
+  const [userHasMoved, setUserHasMoved] = useState<boolean>(false)
   const mapRef = useRef<LeafletMap>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,11 +59,13 @@ function Map({
           Math.abs(center.lng - mapCenter[1]) > 0.0001
         ) {
           setMapCenter([center.lat, center.lng]);
+          setUserHasMoved(true)
         }
       };
 
       const onZoom = () => {
         setMapZoom(map.getZoom());
+        setUserHasMoved(true)
       };
 
       map.on("moveend", onMove);
@@ -78,13 +81,14 @@ function Map({
   }
 
   useEffect(() => {
-    if (mapRef.current) {
+    if (mapRef.current && !userHasMoved) {
       mapRef.current.setView(position, mapZoom);
     }
-  }, [position, mapZoom]);
+  }, [position, mapZoom, userHasMoved]);
 
   async function onGetPositionClick() {
     await getPositionAndEvents();
+    setUserHasMoved(false);
     if (mapRef.current) {
       mapRef.current.setView(position, mapZoom);
     }
@@ -105,6 +109,7 @@ function Map({
           setPosition(searchCoord);
         }
 
+        setUserHasMoved(false);
         mapRef.current?.setView(searchCoord, mapZoom, {
           duration: 1,
           easeLinearity: 0.25,
