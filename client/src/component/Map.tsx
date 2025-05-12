@@ -39,6 +39,7 @@ function Map({
 }: MapProps) {
 
   const [hasClicked, setHasClicked] = useState<boolean>(false)
+  const [datePicker, setDatePicker] = useState<Date>(selectedDate)
   const mapRef = useRef<LeafletMap>(null)
   const searchInputRef = useRef<HTMLInputElement>(null);
   let zoom: number;
@@ -107,6 +108,8 @@ function Map({
           duration: 1,
           easeLinearity: 0.25,
         });
+
+        setSelectedDate(datePicker)
       })
       .catch(console.error);
   };
@@ -150,7 +153,7 @@ function Map({
             selected={selectedDate}
             onChange={(date) => {
               if (date) {
-                setSelectedDate(date);
+                setDatePicker(date);
               }
             }}
             dateFormat="dd MMM, yyyy"
