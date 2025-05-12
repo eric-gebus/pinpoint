@@ -10,6 +10,8 @@ interface MapProps {
   mapZoom: number;
   mapCenter: [number, number];
   setMapZoom: (arg: number) => void;
+  favoriteEvents:Event[];
+  toggleFavorite: (event:Event) => void
   setMapCenter: (arg: [number, number]) => void;
   isLoadingEvents: boolean;
 }
@@ -24,7 +26,9 @@ function Map({
   mapCenter,
   setMapZoom,
   setMapCenter,
-  isLoadingEvents
+  isLoadingEvents,
+  favoriteEvents,
+  toggleFavorite
 }: MapProps) {
 
   const [hasClicked, setHasClicked] = useState<boolean>(false)
@@ -121,7 +125,7 @@ function Map({
                 attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
               />
               <ChangeView/>
-              <Pin position={position} eventList={eventList} />
+              <Pin position={position} eventList={eventList} favoriteEvents={favoriteEvents} toggleFavorite={toggleFavorite} />
             </MapContainer>
           }
           {/* Button container */}
