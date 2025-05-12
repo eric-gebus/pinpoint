@@ -7,6 +7,8 @@ interface MapProps {
   getPositionAndEvents: () => void;
   mapZoom: number;
   setMapZoom: (arg: number) => void;
+  favoriteEvents:Event[];
+  toggleFavorite: (event:Event) => void
 }
 
 interface ChangeViewProps {
@@ -21,7 +23,11 @@ function Map({
   eventList,
   mapZoom,
   setMapZoom,
+  favoriteEvents,
+  toggleFavorite
 }: MapProps) {
+
+
   function ChangeView({ center }: ChangeViewProps) {
     const map = useMap();
     const mapCenter = map.getCenter();
@@ -83,7 +89,7 @@ function Map({
                 attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
               />
               <ChangeView center={position} />
-              <Pin position={position} eventList={eventList} />
+              <Pin position={position} eventList={eventList} favoriteEvents={favoriteEvents} toggleFavorite={toggleFavorite} />
             </MapContainer>
           }
           {/* Button container */}

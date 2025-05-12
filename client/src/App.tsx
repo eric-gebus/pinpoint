@@ -24,6 +24,8 @@ function App() {
   const [position, setPosition] = useState<[number, number]>();
   const [eventList, setEventList] = useState<Event[]>([]);
   const [mapZoom, setMapZoom] = useState<number>(11);
+  const [favoriteEvents,setFavoriteEvents]=useState<Event[]>([]);
+
   
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
@@ -40,6 +42,34 @@ function App() {
       }
     })();
   }, [position]);
+
+  useEffect(()=>{
+    (async ()=>{
+      const savedFavoriteEvents=await apiService.getFavoriteEvents();
+      console.log("fav events from pin: ",savedFavoriteEvents);
+      setFavoriteEvents(savedFavoriteEvents);
+    })()
+  },[])
+
+
+  
+  function toggleFavorite(event:Event){
+    console.log("fav clicked");
+    const updatedEvent = { ...event }; 
+    if(!favoriteEvents.some(fav => fav.id === updatedEvent.id)){
+      event.isFavorite=true;
+      apiService.favoriteEvent(event);
+      setFavoriteEvents([...favoriteEvents,event]);
+    }else{
+      event.isFavorite=false;
+      apiService.removeFavoriteEvent(event);
+      const updatedFavoriteList=favoriteEvents.filter((favEvent)=>{
+        return favEvent.id !==event.id
+      })
+      setFavoriteEvents(updatedFavoriteList);
+    }
+  }
+  
 
   async function getPositionAndEvents() {
     try {
@@ -88,10 +118,14 @@ function App() {
                 getPositionAndEvents={getPositionAndEvents}
                 mapZoom={mapZoom}
                 setMapZoom={setMapZoom}
+                favoriteEvents={favoriteEvents} 
+                toggleFavorite={toggleFavorite}
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList} />} />
+          <Route path="/list" element={<List eventList={eventList}                   favoriteEvents={favoriteEvents} 
+                favEvents={favoriteEvents} 
+                toggleFavorite={toggleFavorite} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
         <Navbar/>
