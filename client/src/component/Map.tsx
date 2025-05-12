@@ -53,7 +53,12 @@ function Map({
 
       const onMove = () => {
         const center = map.getCenter();
-        setMapCenter([center.lat, center.lng]);
+        if (
+          Math.abs(center.lat - mapCenter[0]) > 0.0001 ||
+          Math.abs(center.lng - mapCenter[1]) > 0.0001
+        ) {
+          setMapCenter([center.lat, center.lng]);
+        }
       };
 
       const onZoom = () => {
