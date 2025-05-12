@@ -121,6 +121,14 @@ function Map({
       <div className="flex place-content-between p-2 ">
         {/* search-input */}
         <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
+          <input
+            type="search"
+            required
+            placeholder="Search"
+            ref={searchInputRef}
+            defaultValue=""
+            className="pl-2"
+          />
           <svg
             className="h-[1em] mr-2 opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -137,17 +145,12 @@ function Map({
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input
-            type="search"
-            required
-            placeholder="Search"
-            ref={searchInputRef}
-            defaultValue=""
-          />
         </label>
         {/* calendar */}
         <div className="flex">
-          <img src="calendar.svg" width={20}/>
+          <div className="relative position-absolute top-2 left-46">
+            <img src="calendar.svg" width={20} />
+          </div>
           <DatePicker
             selected={selectedDate}
             onChange={(date) => {
@@ -160,7 +163,9 @@ function Map({
             className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2 ml-2"
           />
         </div>
-        <button className="rounded-[16px] bg-white p-2" onClick={handleSearch}>Explore</button>
+        <button className="rounded-[16px] bg-white p-2" onClick={handleSearch}>
+          Explore
+        </button>
       </div>
       {/* map-container */}
       <div className="basis-full relative">
