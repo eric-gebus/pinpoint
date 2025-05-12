@@ -160,7 +160,7 @@ function Weather({ position }: WeatherProps) {
   }
 
   return (
-    <div className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md shadow-xl max-w-full">
+    <div className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md shadow-xl max-w-full m-3">
     <div className='relative flex items-center'>
       <MdChevronLeft className="opacity-50 cursor-pointer hover:opacity-100" onClick={slideLeft} size={40} />
       <div id ='slider' className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide no-scrollbar">
