@@ -94,7 +94,6 @@ export async function favoriteEvent(req:Request,res:Response){
 }
 
 export async function favoriteEventList(req:Request,res:Response){
-  console.log("reached server fav event");
   try {
     const favoriteEventList=await EventModel.find();
     res.setHeader("Content-Type", "application/json");
