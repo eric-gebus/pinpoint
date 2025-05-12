@@ -22,11 +22,6 @@ interface MapProps {
   selectedDate: Date;
 }
 
-interface ChangeViewProp {
-  position: [number, number];
-  zoom: number;
-}
-
 const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
 function Map({
@@ -75,7 +70,7 @@ function Map({
 
     return null;
   }
-  
+
 
   useEffect(() => {
     if (mapRef.current) {
