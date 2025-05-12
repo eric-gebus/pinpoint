@@ -17,7 +17,9 @@ interface MapProps {
   setMapZoom: (arg: number) => void;
   setMapCenter: (arg: [number, number]) => void;
   isLoadingEvents: boolean;
-  setPosition: (position: [number, number]) => void
+  setPosition: (position: [number, number]) => void;
+  setSelectedDate: (selectedDate: Date) => void;
+  selectedDate: Date;
 }
 
 const MAP_KEY = import.meta.env.VITE_MAP_KEY;
@@ -31,12 +33,13 @@ function Map({
   setMapZoom,
   setMapCenter,
   isLoadingEvents,
-  setPosition
+  setPosition,
+  setSelectedDate,
+  selectedDate,
 }: MapProps) {
 
   const [hasClicked, setHasClicked] = useState<boolean>(false)
   const mapRef = useRef<LeafletMap>(null)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const searchInputRef = useRef<HTMLInputElement>(null);
   let zoom: number;
   let center: [number, number];
@@ -96,7 +99,6 @@ function Map({
         const searchLat = parseFloat(results[0].lat);
         const searchLong = parseFloat(results[0].lon);
         const searchCoord: [number, number] = [searchLat, searchLong];
-
         if (position[0] !== searchCoord[0] || position[1] !== searchCoord[1]) {
           setPosition(searchCoord);
         }
@@ -146,7 +148,11 @@ function Map({
           <h2 className="text-lg font-semibold mb-2">Select a Date:</h2>
           <DatePicker
             selected={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
+            onChange={(date) => {
+              if (date) {
+                setSelectedDate(date);
+              }
+            }}
             dateFormat="dd MMM, yyyy"
             className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2"
           />

@@ -2,7 +2,7 @@ import { fetchWeatherApi } from 'openmeteo';
 
 export default {
 
-  searchEvent: async function (position: [number, number]) {
+  searchEvent: async function (position: [number, number], date: Date) {
     try {
       const response = await fetch('http://localhost:3000/events/search', {
         method: 'POST',
@@ -11,7 +11,8 @@ export default {
         },
         body: JSON.stringify({
           latitude: position[0],
-          longitude:position[1]
+          longitude:position[1],
+          date: date
         })
       })
 

@@ -2,11 +2,11 @@ import express, { Request, Response } from 'express';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-function getTodayUtcRange() {
-  const now = new Date();
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth();
-  const day = now.getUTCDate();
+function getUtcRange(dateInput: Date) {
+  const date = new Date(dateInput)
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth();
+  const day = date.getUTCDate();
 
   const YMDUtc = `${year}-${pad(month + 1)}-${pad(day)}`;
   const startUtc = `${YMDUtc}T00:00:00Z`;
@@ -40,13 +40,13 @@ function filterEvents(events: any[]) {
 }
 
 export async function searchEvents(req:Request,res:Response){
-    const { latitude, longitude, radius, keyword } = req.body;
+    const { latitude, longitude, radius, keyword, date } = req.body;
     if (!(latitude && longitude)) {
        res.status(404).send("Latitude and/or longitude was not provided");
        return;
     }
     const key = process.env.API_KEY!;
-    const { startUtc, endUtc } = getTodayUtcRange();
+    const { startUtc, endUtc } = getUtcRange(date);
     const queryParamsDict: { [key: string]: string } = {
      apikey: key,
      latlong: `${latitude},${longitude}`,

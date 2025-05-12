@@ -27,7 +27,9 @@ function App() {
   const [mapZoom, setMapZoom] = useState<number>(11);
   const [mapCenter, setMapCenter] = useState<[number, number]>(defaultPosition);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
- 
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -39,7 +41,7 @@ function App() {
       if (position) {
         setIsLoadingEvents(true);
         try {
-          const events = await apiService.searchEvent(position);
+          const events = await apiService.searchEvent(position, selectedDate);
           setEventList(events);
         } catch (error) {
           console.error("Error fetching events:", error);
@@ -49,7 +51,7 @@ function App() {
         }
       }
     })();
-  }, [position]);
+  }, [position, selectedDate]);
 
   async function getPositionAndEvents() {
     try {
@@ -84,7 +86,7 @@ function App() {
       <Router>
         <Weather position={position ? position : defaultPosition} />
         <Navbar />
-        
+
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
           <Route
@@ -100,6 +102,8 @@ function App() {
                 setMapCenter={setMapCenter}
                 isLoadingEvents={isLoadingEvents}
                 setPosition={setPosition}
+                setSelectedDate={setSelectedDate}
+                selectedDate= {selectedDate}
               />
             }
           />
