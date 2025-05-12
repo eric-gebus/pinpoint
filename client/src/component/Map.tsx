@@ -76,7 +76,7 @@ function Map({
         if (zoom) setMapZoom(zoom);
         if (center) setMapCenter(center);
       };
-    }, []);
+    }, [position]);
 
     return null;
   }
