@@ -65,9 +65,6 @@ function App() {
       console.log(`Longitude: ${crd.longitude}`);
       console.log(`More or less ${crd.accuracy} meters.`);
 
-
-
-
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.warn(`ERROR: ${err.message}`);
