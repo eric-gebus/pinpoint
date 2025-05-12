@@ -72,13 +72,13 @@ function Weather({ position }: WeatherProps) {
   function getWeatherIcon(code: number, date: Date) {
     const hour = date.getHours()
 
-    const isNightTime = hour >= 21 || hour < 6;
+    const isNightTime = hour >= 19 || hour < 7;
 
     if (code === 0 && isNightTime) {
       return moon
     }
 
-    if ((code === 1 || code === 2) && isNightTime) {
+    if ((code === 1 || code === 2 || code === 3) && isNightTime) {
       return cloudy_night
     }
 
@@ -135,6 +135,7 @@ function Weather({ position }: WeatherProps) {
               weatherCode: weatherData.hourly.weatherCode[startIndex + i],
               precipitationProbability: weatherData.hourly.precipitationProbability[startIndex + i],
             }));
+            console.log(slicedData)
           setHourlyWeather(slicedData);
         }
       } catch (error) {
