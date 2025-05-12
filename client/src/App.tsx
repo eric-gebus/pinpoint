@@ -123,7 +123,7 @@ function App() {
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList}                   favoriteEvents={favoriteEvents} 
+          <Route path="/list" element={<List eventList={eventList}
                 favEvents={favoriteEvents} 
                 toggleFavorite={toggleFavorite} />} />
           <Route path="/favorites" element={<Favorites />} />
