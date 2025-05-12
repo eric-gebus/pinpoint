@@ -13,6 +13,7 @@ import apiService from "./apiService.tsx";
 import Weather from "./component/Weather.tsx";
 import Favorites from "./component/Favorites.tsx";
 
+
 interface GeolocationOptions {
   enableHighAccuracy?: boolean;
   timeout?: number;
@@ -26,7 +27,7 @@ function App() {
   const [mapZoom, setMapZoom] = useState<number>(11);
   const [mapCenter, setMapCenter] = useState<[number, number]>(defaultPosition);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
-
+ 
   const options: GeolocationOptions = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -81,8 +82,9 @@ function App() {
   return (
     <>
       <Router>
-        <Weather position={position?position:defaultPosition} />
+        <Weather position={position ? position : defaultPosition} />
         <Navbar />
+        
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
           <Route
@@ -90,7 +92,7 @@ function App() {
             element={
               <Map
                 eventList={eventList}
-                position={position?position:defaultPosition}
+                position={position ? position : defaultPosition}
                 getPositionAndEvents={getPositionAndEvents}
                 mapZoom={mapZoom}
                 mapCenter={mapCenter}
@@ -104,7 +106,7 @@ function App() {
           <Route path="/list" element={<List eventList={eventList} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
-        <Navbar/>
+        <Navbar />
       </Router>
     </>
   );
