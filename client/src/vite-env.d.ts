@@ -24,6 +24,7 @@ interface Event {
   _links:    EventLinks;
   _embedded: Embedded;
   url:       string;
+  isFavorite:boolean;
 }
 
 interface Embedded {
@@ -143,4 +144,16 @@ interface Ticketing {
 
 interface SafeTix {
   enabled: boolean;
+}
+
+interface FavoriteEvent{
+  name: string,
+  id?: string,
+  url:string,
+  locale?: string,
+  image:string,
+  address?:string,
+  distance:number,
+  startDate?:Date,
+  endDate?:Date,
 }
