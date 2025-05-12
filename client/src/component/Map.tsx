@@ -128,7 +128,8 @@ function Map({
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input  type="search"
+          <input
+            type="search"
             required
             placeholder="Search"
             ref={searchInputRef}
