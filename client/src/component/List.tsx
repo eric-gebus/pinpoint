@@ -1,19 +1,35 @@
 import Element from "./Element";
+import { Category } from "../App";
 
 interface ListProps {
   eventList: Event[];
-  favEvents:Event[];
-  toggleFavorite: (event:Event) => void
+  restaurantList: Restaurant[];
+  favEvents: Event[];
+  toggleFavorite: (event: Event) => void;
+  selectedCategory: Category;
 }
 
-function List({ eventList, favEvents,toggleFavorite}: ListProps) {
+function List({
+  eventList,
+  restaurantList,
+  favEvents,
+  toggleFavorite,
+  selectedCategory,
+}: ListProps) {
+
+  const items = selectedCategory === Category.Events ? eventList : restaurantList;
+
   return (
     <div className="flex m-2 flex-col gap-2 max-w-md">
-      { 
-        eventList.map((event, index) => (
-          <Element key={index} event={event} favoriteEvents={favEvents} toggleFavorite={toggleFavorite}/>
-        ))
-      }
+      {items.map((item, index) => (
+        <Element
+          key={index}
+          item={item}
+          favoriteEvents={favEvents}
+          toggleFavorite={toggleFavorite}
+          selectedCategory={selectedCategory}
+        />
+      ))}
     </div>
   );
 }

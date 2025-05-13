@@ -1,34 +1,41 @@
+// Map.tsx
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { Map as LeafletMap } from "leaflet";
-import Pin from "./Pin";
 import { useEffect, useRef, useState } from "react";
 import apiService from "../apiService";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
+import CategoryDropdown from "./CategoryDropdown";
+import { Category } from "../App";
+import EventPin from "./EventPin";
+import RestaurantPin from "./RestaurantPin";
+
+const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
 interface MapProps {
   position: [number, number];
   eventList: Event[];
+  restaurantList: Restaurant[];
   getPositionAndEvents: () => Promise<void>;
   mapZoom: number;
   mapCenter: [number, number];
   setMapZoom: (arg: number) => void;
-  favoriteEvents:Event[];
-  toggleFavorite: (event:Event) => void
+  favoriteEvents: Event[];
+  toggleFavorite: (event: Event) => void;
   setMapCenter: (arg: [number, number]) => void;
   isLoadingEvents: boolean;
   setPosition: (position: [number, number]) => void;
   setSelectedDate: (selectedDate: Date) => void;
   selectedDate: Date;
+  selectedCategory: Category;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
 }
-
-const MAP_KEY = import.meta.env.VITE_MAP_KEY;
 
 function Map({
   position,
   getPositionAndEvents,
   eventList,
+  restaurantList,
   mapZoom,
   mapCenter,
   setMapZoom,
@@ -38,11 +45,13 @@ function Map({
   setSelectedDate,
   selectedDate,
   favoriteEvents,
-  toggleFavorite
+  toggleFavorite,
+  selectedCategory,
+  setSelectedCategory,
 }: MapProps) {
   const [hasClicked, setHasClicked] = useState<boolean>(false);
   const [datePicker, setDatePicker] = useState<Date>(selectedDate);
-  const [userHasMoved, setUserHasMoved] = useState<boolean>(false)
+  const [userHasMoved, setUserHasMoved] = useState<boolean>(false);
   const mapRef = useRef<LeafletMap>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,13 +68,13 @@ function Map({
           Math.abs(center.lng - mapCenter[1]) > 0.0001
         ) {
           setMapCenter([center.lat, center.lng]);
-          setUserHasMoved(true)
+          setUserHasMoved(true);
         }
       };
 
       const onZoom = () => {
         setMapZoom(map.getZoom());
-        setUserHasMoved(true)
+        setUserHasMoved(true);
       };
 
       map.on("moveend", onMove);
@@ -120,11 +129,22 @@ function Map({
       .catch(console.error);
   };
 
+  const renderNoResultsMessage = () => {
+    if (hasClicked && !isLoadingEvents) {
+      if (selectedCategory === Category.Events && eventList.length === 0) {
+        return "No available events in your area";
+      } else if (selectedCategory === Category.Restaurants && restaurantList.length === 0) {
+        return "No available restaurants in your area";
+      }
+    }
+    return null;
+  };
+
   return (
     <>
-      {/* search-nav-container */}
-      <div className="flex place-content-between p-2 ">
-        {/* search-input */}
+      {/* Search-nav container */}
+      <div className="flex place-content-between p-3 ">
+        {/* Search input */}
         <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
           <input
             type="search"
@@ -132,10 +152,10 @@ function Map({
             placeholder="Search"
             ref={searchInputRef}
             defaultValue=""
-            className="pl-2"
+            className="pl-2 font-semibold"
           />
           <svg
-            className="h-[1em] mr-2 opacity-50"
+            className="h-[1em] mr-2"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
@@ -151,48 +171,73 @@ function Map({
             </g>
           </svg>
         </label>
-        {/* calendar */}
-        <div className="flex">
-          <div className="relative position-absolute top-2 left-46">
-            <img src="calendar.svg" width={20} />
-          </div>
-          <DatePicker
+
+        {/* Show calendar only for events */}
+        {selectedCategory === Category.Events && (
+          <div className="flex">
+            <div className="relative position-absolute top-2 left-46">
+              <img src="calendar.svg" width={20} />
+            </div>
+            <DatePicker
             selected={selectedDate}
             onChange={(date) => {
               if (date) {
+                setSelectedDate(date);
                 setDatePicker(date);
               }
             }}
             dateFormat="dd MMM, yyyy"
             calendarStartDay={1}
-            className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2 ml-2"
-          />
+            className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2 ml-2"/>
         </div>
-        <button className="rounded-[16px] bg-white p-2" onClick={handleSearch}>
-          Explore
+        )}
+
+        <button className="relative cursor-pointer hover:opacity-70 transition-opacity p-[2px] rounded-[16px]
+        bg-gradient-to-b from-[#ffffff] to-[#A452A0] active:scale-95" onClick={handleSearch}>
+        <span className="w-full h-full flex items-center gap-2 px-8 py-3 bg-[#ffffff]
+                text-[#A452A0] font-bold rounded-[14px]">
+        Explore
+        </span>
         </button>
       </div>
-      {/* map-container */}
+
+      {/* Category Dropdown */}
+      <CategoryDropdown setSelectedCategory={setSelectedCategory} />
+
+      {/* Map container */}
       <div className="basis-full relative">
         <div className="m-3 overflow-hidden rounded-xl shadow-lg/50 relative">
-          {
-            <MapContainer
-              center={mapCenter}
-              zoom={mapZoom}
-              scrollWheelZoom={true}
-              style={{ height: "55vh", width: "100vw", zIndex: 0 }}
-            >
-              <TileLayer
-                url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
-                tileSize={512}
-                zoomOffset={-1}
-                minZoom={1}
-                attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+          <MapContainer
+            center={mapCenter}
+            zoom={mapZoom}
+            scrollWheelZoom={true}
+            style={{ height: "55vh", width: "100vw", zIndex: 0 }}
+          >
+            <TileLayer
+              url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${MAP_KEY}`}
+              tileSize={512}
+              zoomOffset={-1}
+              minZoom={1}
+              attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+            />
+            <ChangeView />
+
+            {/* Render the appropriate pins based on selected category */}
+            {selectedCategory === Category.Events ? (
+              <EventPin
+                position={position}
+                eventList={eventList}
+                favoriteEvents={favoriteEvents}
+                toggleFavorite={toggleFavorite}
               />
-              <ChangeView/>
-              <Pin position={position} eventList={eventList} favoriteEvents={favoriteEvents} toggleFavorite={toggleFavorite} />
-            </MapContainer>
-          }
+            ) : (
+              <RestaurantPin
+                position={position}
+                restaurantList={restaurantList}
+              />
+            )}
+          </MapContainer>
+
           {/* Button container */}
           <div
             className="absolute bottom-4 right-1 p-[4px] rounded-[16px]"
@@ -207,13 +252,13 @@ function Map({
           </div>
         </div>
       </div>
-      {eventList.length == 0 &&
-        hasClicked === true &&
-        isLoadingEvents === false && (
-          <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 text-lg font-small">
-            No available events in your area
-          </h1>
-        )}
+
+      {/* No results message */}
+      {renderNoResultsMessage() && (
+        <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 text-lg font-small">
+          {renderNoResultsMessage()}
+        </h1>
+      )}
     </>
   );
 }

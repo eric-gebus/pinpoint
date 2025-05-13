@@ -23,7 +23,7 @@ interface PinProps{
     toggleFavorite: (event:Event) => void
 }
 
-function Pin({position,eventList, favoriteEvents,toggleFavorite}:PinProps) {
+function EventPin({position,eventList, favoriteEvents,toggleFavorite}:PinProps) {
 
   return (
     <>
@@ -64,4 +64,4 @@ function Pin({position,eventList, favoriteEvents,toggleFavorite}:PinProps) {
   );
 }
 
-export default Pin;
+export default EventPin;

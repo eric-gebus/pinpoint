@@ -8,16 +8,21 @@ import {
 } from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
-import Map from "./component/Map.tsx";
 import apiService from "./apiService.tsx";
 import Weather from "./component/Weather.tsx";
 import Favorites from "./component/Favorites.tsx";
+import Map from "./component/Map.tsx";
 
 
 interface GeolocationOptions {
   enableHighAccuracy?: boolean;
   timeout?: number;
   maximumAge?: number;
+}
+
+enum Category {
+  Events,
+  Restaurants
 }
 
 function App() {
@@ -29,6 +34,8 @@ function App() {
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [favoriteEvents,setFavoriteEvents]=useState<Event[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category>(Category.Events);
+  const [restaurantList, setRestaurantList] = useState<Restaurant[]>([]);
 
 
   const options: GeolocationOptions = {
@@ -38,18 +45,25 @@ function App() {
   };
 
   useEffect(() => {
+    if (!position) return;
     (async () => {
-      if (position) {
-        setIsLoadingEvents(true);
-        try {
-          const events = await apiService.searchEvent(position, selectedDate);
-          setEventList(events);
-        } catch (error) {
-          console.error("Error fetching events:", error);
-          setEventList([]);
-        } finally {
-          setIsLoadingEvents(false);
-        }
+      setIsLoadingEvents(true);
+      try {
+        const events = await apiService.searchEvent(position, selectedDate);
+        setEventList(events);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        setEventList([]);
+      }
+      try {
+          const restaurants = await apiService.getRestaurants(position);
+          setRestaurantList(restaurants);
+          console.log('nearby restaurants: ', restaurants);
+      } catch (error) {
+          console.error("Error fetching restaurants:", error);
+          setRestaurantList([]);
+      } finally {
+        setIsLoadingEvents(false);
       }
     })();
   }, [position, selectedDate]);
@@ -115,7 +129,6 @@ function App() {
       <Router>
         <Weather position={position ? position : defaultPosition} />
         <Navbar />
-
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
           <Route
@@ -123,6 +136,7 @@ function App() {
             element={
               <Map
                 eventList={eventList}
+                restaurantList={restaurantList}
                 position={position ? position : defaultPosition}
                 getPositionAndEvents={getPositionAndEvents}
                 mapZoom={mapZoom}
@@ -132,16 +146,21 @@ function App() {
                 isLoadingEvents={isLoadingEvents}
                 setPosition={setPosition}
                 setSelectedDate={setSelectedDate}
-                selectedDate= {selectedDate}
+                selectedDate={selectedDate}
                 favoriteEvents={favoriteEvents}
                 toggleFavorite={toggleFavorite}
-
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList}
-                favEvents={favoriteEvents}
-                toggleFavorite={toggleFavorite} />} />
+          <Route path="/list" element={
+            <List
+            eventList={eventList}
+            restaurantList={restaurantList}
+            favEvents={favoriteEvents}
+            toggleFavorite={toggleFavorite}
+            selectedCategory={selectedCategory} />} />
           <Route path="/favorites" element={<Favorites favEvents={favoriteEvents} toggleFavorite={toggleFavorite}/>} />
         </Routes>
         <Navbar />
@@ -151,3 +170,4 @@ function App() {
 }
 
 export default App;
+export { Category };
