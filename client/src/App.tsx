@@ -154,7 +154,13 @@ function App() {
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList} favEvents={favoriteEvents} toggleFavorite={toggleFavorite} />} />
+          <Route path="/list" element={
+            <List
+            eventList={eventList}
+            restaurantList={restaurantList}
+            favEvents={favoriteEvents}
+            toggleFavorite={toggleFavorite}
+            selectedCategory={selectedCategory} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
         <Navbar />
