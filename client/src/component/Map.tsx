@@ -99,7 +99,7 @@ function Map({
     await getPositionAndEvents();
     setUserHasMoved(false);
     if (mapRef.current) {
-      mapRef.current.setView(position, mapZoom);
+      mapRef.current.setView(position, 11);
     }
     setHasClicked(true);
   }
@@ -133,7 +133,10 @@ function Map({
     if (hasClicked && !isLoadingEvents) {
       if (selectedCategory === Category.Events && eventList.length === 0) {
         return "No available events in your area";
-      } else if (selectedCategory === Category.Restaurants && restaurantList.length === 0) {
+      } else if (
+        selectedCategory === Category.Restaurants &&
+        restaurantList.length === 0
+      ) {
         return "No available restaurants in your area";
       }
     }
@@ -143,21 +146,22 @@ function Map({
   return (
     <>
       {/* Search-nav container */}
-      <div className="flex place-content-between p-3 ">
+      <div className="flex items-center justify-between gap-3 p-3">
         {/* Search input */}
-        <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
+        <label className="flex pl-2 bg-gradient-to-b from-stone-300/70 to-transparent p-[4px] rounded-[16px] flex-grow">
           <input
             type="search"
             required
             placeholder="Search"
             ref={searchInputRef}
             defaultValue=""
-            className="pl-2 font-semibold"
+            className="font-medium w-full"
           />
           <svg
-            className="h-[1em] mr-2"
+            className="h-[1em] m-2"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
+            onClick={handleSearch}
           >
             <g
               strokeLinejoin="round"
@@ -174,35 +178,33 @@ function Map({
 
         {/* Show calendar only for events */}
         {selectedCategory === Category.Events && (
-          <div className="flex">
-            <div className="relative position-absolute top-2 left-46">
+          <div className="flex items-center"
+          style={{ zIndex: 1000 }}>
+            <div className="relative position-absolute left-45">
               <img src="calendar.svg" width={20} />
             </div>
             <DatePicker
-            selected={selectedDate}
-            onChange={(date) => {
-              if (date) {
-                setSelectedDate(date);
-                setDatePicker(date);
-              }
-            }}
-            dateFormat="dd MMM, yyyy"
-            calendarStartDay={1}
-            className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2 ml-2"/>
-        </div>
+              selected={selectedDate}
+              onChange={(date) => {
+                if (date) {
+                  setSelectedDate(date);
+                  setDatePicker(date);
+                }
+              }}
+              dateFormat="dd MMM, yyyy"
+              calendarStartDay={1}
+              className="rounded-[16px] bg-gradient-to-b from-stone-300/70 to-transparent p-2 ml-2"
+            />
+          </div>
         )}
-
-        <button className="relative cursor-pointer hover:opacity-70 transition-opacity p-[2px] rounded-[16px]
-        bg-gradient-to-b from-[#ffffff] to-[#A452A0] active:scale-95" onClick={handleSearch}>
-        <span className="w-full h-full flex items-center gap-2 px-8 py-3 bg-[#ffffff]
-                text-[#A452A0] font-bold rounded-[14px]">
-        Explore
-        </span>
-        </button>
       </div>
 
       {/* Category Dropdown */}
-      <CategoryDropdown setSelectedCategory={setSelectedCategory} />
+      <div 
+        className="absolute right-5"
+        style={{ zIndex: 1 }}>
+        <CategoryDropdown setSelectedCategory={setSelectedCategory} />
+      </div>
 
       {/* Map container */}
       <div className="basis-full relative">
@@ -238,7 +240,7 @@ function Map({
             )}
           </MapContainer>
 
-          {/* Button container */}
+          {/* Button geoposition */}
           <div
             className="absolute bottom-4 right-1 p-[4px] rounded-[16px]"
             style={{ zIndex: 1000 }}

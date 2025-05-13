@@ -12,7 +12,8 @@
 
 :root {
   background-image: url("bg/bg_gradient.png");
-  background-size: cover;
+  background-size: auto 100%;
+  background-attachment: fixed;
   background-repeat: no-repeat;
   background-position: center;
   height: 100%;
