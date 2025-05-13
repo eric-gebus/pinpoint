@@ -165,5 +165,37 @@ export default {
       console.log('Error in favoriteEvent list', error)
       throw error
     }
+  },
+
+  getRestaurants: async function (position: [number, number]) {
+    const [latitude, longitude] = position;
+    const query = `
+    [out:json][timeout:25];
+    (
+      node["amenity"="restaurant"](around:20000,${latitude},${longitude});
+      way["amenity"="restaurant"](around:20000,${latitude},${longitude});
+      relation["amenity"="restaurant"](around:20000,${latitude},${longitude});
+    );
+    out center 500;
+    `;
+
+    const params = new URLSearchParams({ data: query });
+
+    const response = await fetch("https://overpass-api.de/api/interpreter", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: params
+    });
+
+    if (!response.ok) {
+      throw new Error(`Overpass API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.elements.filter((restaurant: Restaurant) => {
+      return (("lat" in restaurant) && ("lon" in restaurant) && ("tags" in restaurant) && ("name" in restaurant.tags));
+    });
   }
 }

@@ -8,16 +8,22 @@ import {
 } from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
-import Map from "./component/Map.tsx";
+import EventMap from "./component/EventMap.tsx";
 import apiService from "./apiService.tsx";
 import Weather from "./component/Weather.tsx";
 import Favorites from "./component/Favorites.tsx";
+import RestaurantMap from "./component/RestaurantMap.tsx";
 
 
 interface GeolocationOptions {
   enableHighAccuracy?: boolean;
   timeout?: number;
   maximumAge?: number;
+}
+
+enum Category {
+  Events,
+  Restaurants
 }
 
 function App() {
@@ -29,6 +35,8 @@ function App() {
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [favoriteEvents,setFavoriteEvents]=useState<Event[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category>(Category.Events);
+  const [restaurantList, setRestaurantList] = useState<Restaurant[]>([]);
 
 
   const options: GeolocationOptions = {
@@ -38,18 +46,25 @@ function App() {
   };
 
   useEffect(() => {
+    if (!position) return;
     (async () => {
-      if (position) {
-        setIsLoadingEvents(true);
-        try {
-          const events = await apiService.searchEvent(position, selectedDate);
-          setEventList(events);
-        } catch (error) {
-          console.error("Error fetching events:", error);
-          setEventList([]);
-        } finally {
-          setIsLoadingEvents(false);
-        }
+      setIsLoadingEvents(true);
+      try {
+        const events = await apiService.searchEvent(position, selectedDate);
+        setEventList(events);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        setEventList([]);
+      }
+      try {
+          const restaurants = await apiService.getRestaurants(position);
+          setRestaurantList(restaurants);
+          console.log('nearby restaurants: ', restaurants);
+      } catch (error) {
+          console.error("Error fetching restaurants:", error);
+          setRestaurantList([]);
+      } finally {
+        setIsLoadingEvents(false);
       }
     })();
   }, [position, selectedDate]);
@@ -115,13 +130,13 @@ function App() {
       <Router>
         <Weather position={position ? position : defaultPosition} />
         <Navbar />
-
         <Routes>
           <Route path="/" element={<Navigate to="/map" replace />} />
           <Route
             path="/map"
             element={
-              <Map
+              (selectedCategory === Category.Events) ?
+              <EventMap
                 eventList={eventList}
                 position={position ? position : defaultPosition}
                 getPositionAndEvents={getPositionAndEvents}
@@ -135,7 +150,22 @@ function App() {
                 selectedDate= {selectedDate}
                 favoriteEvents={favoriteEvents}
                 toggleFavorite={toggleFavorite}
-
+                setSelectedCategory={setSelectedCategory}
+              />
+              :
+              <RestaurantMap
+                restaurantList={restaurantList}
+                position={position ? position : defaultPosition}
+                getPositionAndEvents={getPositionAndEvents}
+                mapZoom={mapZoom}
+                mapCenter={mapCenter}
+                setMapZoom={setMapZoom}
+                setMapCenter={setMapCenter}
+                isLoadingEvents={isLoadingEvents}
+                setPosition={setPosition}
+                setSelectedDate={setSelectedDate}
+                selectedDate= {selectedDate}
+                setSelectedCategory={setSelectedCategory}
               />
             }
           />
@@ -151,3 +181,4 @@ function App() {
 }
 
 export default App;
+export { Category };

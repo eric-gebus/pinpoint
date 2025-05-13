@@ -10,6 +10,47 @@ declare module '*.png' {
   export default value;
 }
 
+interface Restaurant {
+  id: number;
+  lat: number;
+  lon: number;
+  tags: {
+    name: string;
+    amenity: string;
+    cuisine?: string;
+
+  }
+}
+
+interface ReverseInformation {
+  place_id: number;
+  licence: string;
+  osm_type: string;
+  osm_id: number;
+  lat: string;
+  lon: string;
+  class: string;
+  type: string;
+  place_rank: number;
+  importance: number;
+  addresstype: string;
+  name: string;
+  display_name: string;
+  address: {
+    amenity: string;
+    house_number: string;
+    road: string;
+    hamlet: string;
+    town: string;
+    county: string;
+    state: string;
+    postcode: string;
+    country: string;
+    country_code: string;
+  },
+  boundingbox: [string, string, string, string]
+}
+
 interface Event {
   name:      string;
   type:      string;
