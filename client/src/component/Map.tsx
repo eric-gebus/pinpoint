@@ -103,7 +103,7 @@ function Map({
     await getPositionAndEvents();
     setUserHasMoved(false);
     if (mapRef.current) {
-      mapRef.current.setView(position, 11);
+      mapRef.current.setView(position, mapZoom);
     }
     setHasClicked(true);
   }
@@ -264,7 +264,7 @@ function Map({
 
       {/* No results message */}
       {renderNoResultsMessage() && (
-        <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 text-lg font-small">
+        <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 mt-1 text-lg font-small">
           {renderNoResultsMessage()}
         </h1>
       )}
