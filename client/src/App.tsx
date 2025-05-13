@@ -8,11 +8,10 @@ import {
 } from "react-router-dom";
 import Navbar from "./component/Navbar.tsx";
 import List from "./component/List.tsx";
-import EventMap from "./component/EventMap.tsx";
 import apiService from "./apiService.tsx";
 import Weather from "./component/Weather.tsx";
 import Favorites from "./component/Favorites.tsx";
-import RestaurantMap from "./component/RestaurantMap.tsx";
+import Map from "./component/Map.tsx";
 
 
 interface GeolocationOptions {
@@ -135,25 +134,8 @@ function App() {
           <Route
             path="/map"
             element={
-              (selectedCategory === Category.Events) ?
-              <EventMap
+              <Map
                 eventList={eventList}
-                position={position ? position : defaultPosition}
-                getPositionAndEvents={getPositionAndEvents}
-                mapZoom={mapZoom}
-                mapCenter={mapCenter}
-                setMapZoom={setMapZoom}
-                setMapCenter={setMapCenter}
-                isLoadingEvents={isLoadingEvents}
-                setPosition={setPosition}
-                setSelectedDate={setSelectedDate}
-                selectedDate= {selectedDate}
-                favoriteEvents={favoriteEvents}
-                toggleFavorite={toggleFavorite}
-                setSelectedCategory={setSelectedCategory}
-              />
-              :
-              <RestaurantMap
                 restaurantList={restaurantList}
                 position={position ? position : defaultPosition}
                 getPositionAndEvents={getPositionAndEvents}
@@ -164,14 +146,15 @@ function App() {
                 isLoadingEvents={isLoadingEvents}
                 setPosition={setPosition}
                 setSelectedDate={setSelectedDate}
-                selectedDate= {selectedDate}
+                selectedDate={selectedDate}
+                favoriteEvents={favoriteEvents}
+                toggleFavorite={toggleFavorite}
+                selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
               />
             }
           />
-          <Route path="/list" element={<List eventList={eventList}
-                favEvents={favoriteEvents}
-                toggleFavorite={toggleFavorite} />} />
+          <Route path="/list" element={<List eventList={eventList} favEvents={favoriteEvents} toggleFavorite={toggleFavorite} />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
         <Navbar />
