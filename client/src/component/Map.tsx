@@ -29,6 +29,8 @@ interface MapProps {
   selectedDate: Date;
   selectedCategory: Category;
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
+  dropDownCategory: string;
+  setDropDownCategory: (string: string) => void
 }
 
 function Map({
@@ -48,6 +50,8 @@ function Map({
   toggleFavorite,
   selectedCategory,
   setSelectedCategory,
+  dropDownCategory,
+  setDropDownCategory
 }: MapProps) {
   const [hasClicked, setHasClicked] = useState<boolean>(false);
   const [datePicker, setDatePicker] = useState<Date>(selectedDate);
@@ -99,7 +103,7 @@ function Map({
     await getPositionAndEvents();
     setUserHasMoved(false);
     if (mapRef.current) {
-      mapRef.current.setView(position, 11);
+      mapRef.current.setView(position, mapZoom);
     }
     setHasClicked(true);
   }
@@ -200,10 +204,13 @@ function Map({
       </div>
 
       {/* Category Dropdown */}
-      <div 
+      <div
         className="absolute right-5"
         style={{ zIndex: 1 }}>
-        <CategoryDropdown setSelectedCategory={setSelectedCategory} />
+        <CategoryDropdown
+        setSelectedCategory={setSelectedCategory}
+        dropDownCategory={dropDownCategory}
+        setDropDownCategory={setDropDownCategory} />
       </div>
 
       {/* Map container */}
@@ -257,7 +264,7 @@ function Map({
 
       {/* No results message */}
       {renderNoResultsMessage() && (
-        <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 text-lg font-small">
+        <h1 className="justify-self-center bg-white divide-x rounded-lg shadow-lg/50 p-2 m-5 mt-1 text-lg font-small">
           {renderNoResultsMessage()}
         </h1>
       )}
