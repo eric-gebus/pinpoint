@@ -29,6 +29,8 @@ interface MapProps {
   selectedDate: Date;
   selectedCategory: Category;
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
+  dropDownCategory: string;
+  setDropDownCategory: (string: string) => void
 }
 
 function Map({
@@ -48,6 +50,8 @@ function Map({
   toggleFavorite,
   selectedCategory,
   setSelectedCategory,
+  dropDownCategory,
+  setDropDownCategory
 }: MapProps) {
   const [hasClicked, setHasClicked] = useState<boolean>(false);
   const [datePicker, setDatePicker] = useState<Date>(selectedDate);
@@ -200,10 +204,13 @@ function Map({
       </div>
 
       {/* Category Dropdown */}
-      <div 
+      <div
         className="absolute right-5"
         style={{ zIndex: 1 }}>
-        <CategoryDropdown setSelectedCategory={setSelectedCategory} />
+        <CategoryDropdown
+        setSelectedCategory={setSelectedCategory}
+        dropDownCategory={dropDownCategory}
+        setDropDownCategory={setDropDownCategory} />
       </div>
 
       {/* Map container */}

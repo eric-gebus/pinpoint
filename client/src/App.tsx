@@ -36,6 +36,7 @@ function App() {
   const [favoriteEvents,setFavoriteEvents]=useState<Event[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>(Category.Events);
   const [restaurantList, setRestaurantList] = useState<Restaurant[]>([]);
+  const [dropDownCategory, setDropDownCategory] = useState<string>('Select a Category')
 
 
   const options: GeolocationOptions = {
@@ -151,6 +152,8 @@ function App() {
                 toggleFavorite={toggleFavorite}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
+                dropDownCategory={dropDownCategory}
+                setDropDownCategory={setDropDownCategory}
               />
             }
           />
