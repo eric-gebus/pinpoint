@@ -142,9 +142,9 @@ function Map({
 
   return (
     <>
-      {/* search-nav-container */}
-      <div className="flex place-content-between p-2">
-        {/* search-input */}
+      {/* Search-nav container */}
+      <div className="flex place-content-between p-3 ">
+        {/* Search input */}
         <label className="flex items-center bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
           <input
             type="search"
@@ -152,10 +152,10 @@ function Map({
             placeholder="Search"
             ref={searchInputRef}
             defaultValue=""
-            className="pl-2"
+            className="pl-2 font-semibold"
           />
           <svg
-            className="h-[1em] mr-2 opacity-50"
+            className="h-[1em] mr-2"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
@@ -179,28 +179,32 @@ function Map({
               <img src="calendar.svg" width={20} />
             </div>
             <DatePicker
-              selected={selectedDate}
-              onChange={(date) => {
-                if (date) {
-                  setDatePicker(date);
-                }
-              }}
-              dateFormat="dd MMM, yyyy"
-              calendarStartDay={1}
-              className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2 ml-2"
-            />
-          </div>
+            selected={selectedDate}
+            onChange={(date) => {
+              if (date) {
+                setSelectedDate(date);
+                setDatePicker(date);
+              }
+            }}
+            dateFormat="dd MMM, yyyy"
+            calendarStartDay={1}
+            className="rounded-[16px] bg-gradient-to-b from-stone-300/40 to-transparent p-2 ml-2"/>
+        </div>
         )}
 
-        <button className="rounded-[16px] bg-white p-2" onClick={handleSearch}>
-          Explore
+        <button className="relative cursor-pointer hover:opacity-70 transition-opacity p-[2px] rounded-[16px]
+        bg-gradient-to-b from-[#ffffff] to-[#A452A0] active:scale-95" onClick={handleSearch}>
+        <span className="w-full h-full flex items-center gap-2 px-8 py-3 bg-[#ffffff]
+                text-[#A452A0] font-bold rounded-[14px]">
+        Explore
+        </span>
         </button>
       </div>
 
       {/* Category Dropdown */}
       <CategoryDropdown setSelectedCategory={setSelectedCategory} />
 
-      {/* map-container */}
+      {/* Map container */}
       <div className="basis-full relative">
         <div className="m-3 overflow-hidden rounded-xl shadow-lg/50 relative">
           <MapContainer
