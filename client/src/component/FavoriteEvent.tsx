@@ -29,7 +29,6 @@ interface ElementProps {
           }
           } className="h-7 w-7 cursor-pointer object-center  mx-auto " alt="" />
       </div>
-    </div>
     );
   }
 
