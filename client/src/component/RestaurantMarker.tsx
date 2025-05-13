@@ -6,11 +6,11 @@ const RestaurantMarker = ({ restaurant }: { restaurant: Restaurant }) => {
   const markerRef = useRef<L.Marker | null>(null);
   const popupRef = useRef<L.Popup>(L.popup());
 
-  const eventPosition: [number, number] = [restaurant.lat, restaurant.lon];
+  const restaurantPosition: [number, number] = [restaurant.lat, restaurant.lon];
 
   return (
     <Marker
-      position={eventPosition}
+      position={restaurantPosition}
       ref={markerRef}
       eventHandlers={{
         click: async () => {
