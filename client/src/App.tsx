@@ -142,7 +142,7 @@ function App() {
           <Route path="/list" element={<List eventList={eventList}
                 favEvents={favoriteEvents}
                 toggleFavorite={toggleFavorite} />} />
-          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/favorites" element={<Favorites favEvents={favoriteEvents} toggleFavorite={toggleFavorite}/>} />
         </Routes>
         <Navbar />
       </Router>
