@@ -24,7 +24,7 @@ function CategoryDropdown({ setSelectedCategory }: CategoryDropdownProps) {
   }
 
   return (
-    <div className="rounded-[16px] bg-white p-2 mt-5 w-fit">
+    <div className="rounded-[16px] border-2 border-[#c7c3b6] bg-white p-2 mt-5 w-fit">
       <button onClick={onSelectClick}>
         Select a Category &#9660;
       </button>

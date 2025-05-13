@@ -148,7 +148,7 @@ function Map({
       {/* Search-nav container */}
       <div className="flex items-center justify-between gap-3 p-3">
         {/* Search input */}
-        <label className="flex pl-2 bg-gradient-to-b from-stone-300/70 to-transparent p-[4px] rounded-[16px] flex-grow">
+        <label className="flex pl-2 bg-white shadow-lg/50 p-[4px] rounded-lg flex-grow">
           <input
             type="search"
             required
@@ -178,9 +178,9 @@ function Map({
 
         {/* Show calendar only for events */}
         {selectedCategory === Category.Events && (
-          <div className="flex items-center"
+          <div className="flex"
           style={{ zIndex: 1000 }}>
-            <div className="relative position-absolute left-45">
+            <div className="absolute right-6 top-52" style={{ zIndex: 1000 }}>
               <img src="calendar.svg" width={20} />
             </div>
             <DatePicker
@@ -193,7 +193,7 @@ function Map({
               }}
               dateFormat="dd MMM, yyyy"
               calendarStartDay={1}
-              className="rounded-[16px] bg-gradient-to-b from-stone-300/70 to-transparent p-2 ml-2"
+              className="rounded-lg bg-white shadow-lg/50 p-2"
             />
           </div>
         )}
@@ -246,7 +246,7 @@ function Map({
             style={{ zIndex: 1000 }}
           >
             <button
-              className="group p-[4px] rounded-[12px] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
+              className="group p-[4px] rounded-[12px] bg-white border-2 border-[#c7c3b6] active:shadow-[0_0px_1px_rgba(0,0,0,1)] active:scale-[0.95]"
               onClick={onGetPositionClick}
             >
               <img src="gps.png" alt="Get Position" className="h-10 w-10" />
