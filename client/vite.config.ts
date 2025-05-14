@@ -8,7 +8,9 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   test: {
+    globals: true,
     environment: "jsdom",
+    setupFiles: 'src/test.setup.js'
   },
   plugins: [
     react(),

@@ -61,7 +61,7 @@ interface Event {
   distance:  number;
   units:     string;
   dates:     Dates;
-  ticketing: Ticketing;
+  ticketing?: Ticketing;
   _links:    EventLinks;
   _embedded: Embedded;
   url:       string;
@@ -87,7 +87,7 @@ interface Venue {
   country:        Country;
   address:        Address;
   location:       Location;
-  upcomingEvents: UpcomingEvents;
+  upcomingEvents?: UpcomingEvents;
   _links:         VenueLinks;
 }
 
@@ -119,7 +119,7 @@ interface Location {
 
 interface State {
   name:      string;
-  stateCode: string;
+  stateCode?: string;
 }
 
 interface UpcomingEvents {
@@ -131,15 +131,15 @@ interface UpcomingEvents {
 
 interface EventLinks {
   self:   Self;
-  venues: Self[];
+  venues?: Self[];
 }
 
 interface Dates {
   start:            Start;
-  end:              End;
+  end?:              End;
   timezone:         string;
   status:           Status;
-  spanMultipleDays: boolean;
+  spanMultipleDays?: boolean;
 }
 
 interface End {
@@ -154,10 +154,10 @@ interface Start {
   localDate:      Date;
   localTime:      string;
   dateTime:       Date;
-  dateTBD:        boolean;
-  dateTBA:        boolean;
-  timeTBA:        boolean;
-  noSpecificTime: boolean;
+  dateTBD?:        boolean;
+  dateTBA?:        boolean;
+  timeTBA?:        boolean;
+  noSpecificTime?: boolean;
 }
 
 interface Status {
@@ -165,7 +165,7 @@ interface Status {
 }
 
 interface Image {
-  ratio:    Ratio;
+  ratio?:    Ratio;
   url:      string;
   width:    number;
   height:   number;

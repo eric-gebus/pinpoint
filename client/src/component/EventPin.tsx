@@ -29,8 +29,11 @@ function EventPin({position,eventList, favoriteEvents,toggleFavorite}:PinProps) 
     <>
       <MarkerClusterGroup>
         {
+
             eventList.map((event:Event)=>{
                 // console.log('event: ',event);
+                console.log('event list: ',eventList)
+
                 event.isFavorite=false;
                 const latitude=Number(event._embedded.venues[0].location.latitude);
                 const longitude=Number(event._embedded.venues[0].location.longitude);
@@ -49,6 +52,7 @@ function EventPin({position,eventList, favoriteEvents,toggleFavorite}:PinProps) 
                       </div>
                     </Popup>
                 </Marker>
+                
             })
         }
       </MarkerClusterGroup>
