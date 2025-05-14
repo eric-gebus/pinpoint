@@ -20,3 +20,6 @@
   width: 100%;
 }
 
+.leaflet-control-attribution {
+  right: 25px !important;
+}
