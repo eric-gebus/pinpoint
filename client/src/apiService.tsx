@@ -41,7 +41,7 @@ export default {
       const url = "https://api.open-meteo.com/v1/forecast";
 
       const responses = await fetchWeatherApi(url, params);
-
+      
       return responses
 
     } catch (error) {
