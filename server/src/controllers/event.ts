@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import EventModel from '../models/event';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -112,5 +112,3 @@ export async function removeFavoriteEvent(req:Request,res:Response){
   await EventModel.deleteOne({id:id});
   res.json(`deleted ${id}`);
 }
-
-// GET localhost:3000/events/search?latitude=40.7128&longitude=74.0060&keyword=dogs

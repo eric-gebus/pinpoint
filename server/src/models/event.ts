@@ -23,6 +23,7 @@ const eventSchema = new mongoose.Schema<pinPointEvent>({
      startDate: {type:Date},
      endDate: {type:Date},
     });
+    
 const EventModel = mongoose.model<pinPointEvent>('events', eventSchema);
 
 export default EventModel;

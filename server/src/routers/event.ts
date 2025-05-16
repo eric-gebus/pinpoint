@@ -8,6 +8,4 @@ eventRouter.post('/favorite',favoriteEvent);
 eventRouter.get('/favoriteEvents',favoriteEventList);
 eventRouter.delete('/removeFavoriteEvent/:id',removeFavoriteEvent);
 
-
-
 export default eventRouter;

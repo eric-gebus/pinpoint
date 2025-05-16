@@ -1,40 +1,62 @@
-<h1 align="left">Welcome to PinPoint</h1>
 
-###
+# PinPoint
 
-<p align="left">Get local events and weather by geolocation search.</p>
+PinPoint is your real-time travel companion, helping you instantly discover local events, restaurants, and weather based on your current location. With a single tap, geolocate yourself and explore nearby activities shown on an interactive map and list view. Plan ahead with a 24-hour weather forecast, search other locations, pick dates, and save your favorites for quick access. Simple, efficient, and built to enhance spontaneous exploration.
 
-###
+## Tech Stack
 
-<h2 align="left">About</h2>
+Frontend: React, Vite, TypeScript, Tailwind CSS
 
-###
+Map: Leaflet for interactive map pins, maptiler
 
-<p align="left">A real-time travel companion that suggests local events, activities, and weather updates all based on your current location. No more "Where to?", just "Let's go!"<br><br>Adventure on demand, wherever you land.<br>
+APIs: OpenMeteo (weather), Overpass (restaurants via OpenStreetMap), Ticketmaster (events)
 
-###
+Backend: Node.js, Express, MongoDB with Mongoose
 
-<h2 align="left">Coded with</h2>
+Testing: Vitest
 
-###
+## Installation
 
-<div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" height="40" alt="typescript logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="40" alt="react logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" height="40" alt="html5 logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original-wordmark.svg" height="40" alt="tailwindcss logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" height="40" alt="nodejs logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" height="40" alt="express logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" height="40" alt="mongodb logo"  />
-  <img src="./client/public/leaflet_logo.png" height="30" alt="leaflet logo"  />
-  <img src="./client/public/logo-open-meteo.png" height="30" alt="Open meteo logo"  />
-  
-</div>
+- Install dependencies in the /client and /server folder.
 
-###
+**Project files:**
+
+- Update the .env.example variables in /client folder with your maptiler API key that you can find here: https://www.maptiler.com/
+
+- Update the .env.example variables in /server folder with your Ticketmaster API key that you can find here: https://developer.ticketmaster.com/
+
+
+## Usage/Examples
+
+1. Start the project locally by running npm run dev in both the /client and /server directories.
+1. On the landing page, allow location access when prompted.
+1. Tap the GPS button at the bottom-right corner to fetch your current location.
+1. Use the category selector at the top-right of the map to browse nearby events or restaurants.
+1. To save an event or place, click on its map pin and tap the heart icon to add it to your favourites.
+1. To remove an item from your favourites, open the "Favourites" category and click the heart icon again.
+1. Search other locations and dates using the search bar and date picker.
+1. Scroll through the weather widget to view the 24-hour forecast for your selected location.
+
+
+
+
+
+
+## Documentation
+
+- [maptiler](https://www.maptiler.com/)
+- [Ticketmaster](https://developer.ticketmaster.com/)
+- [Leaflet API](https://leafletjs.com/reference.html)
+- [React-Leaflet](https://react-leaflet.js.org/)
+
+
+## Authors
+
+- [@eric-gebus](https://www.github.com/-eric-gebus)
+- [@Guillermo-AA](https://github.com/Guillermo-AA)
+- [@liya-mary](https://github.com/liya-mary)
+- [@tylaur](https://github.com/tylaur)
+
+
+## Screenshots
+
