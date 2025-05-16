@@ -60,7 +60,7 @@ PinPoint is your real-time travel companion, helping you instantly discover loca
 
 ## Screenshots
 
-<div style="display: flex; gap: 10px; justify-content: center;">
+<div style="display: flex; gap: 40px; justify-content: center;">
   <img src="/client/public/screenshots/pinpoint.png?raw=true" width="300" alt="Main View" />
   <img src="/client/public/screenshots/pin_view.png?raw=true" width="300" alt="Pin View" />
   <img src="/client/public/screenshots/fav_list.png?raw=true" width="300" alt="Favorites List" />
