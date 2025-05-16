@@ -116,7 +116,6 @@ function Weather({ position }: WeatherProps) {
           },
         };
 
-        //AI >>>>>
          const now = new Date();
          const currentHour = new Date(now);
          currentHour.setMinutes(0, 0, 0);
