@@ -5,15 +5,15 @@ PinPoint is your real-time travel companion, helping you instantly discover loca
 
 ## Tech Stack
 
-Frontend: React, Vite, TypeScript, Tailwind CSS
+- Frontend: React, Vite, TypeScript, Tailwind CSS
 
-Map: Leaflet for interactive map pins, maptiler
+- Backend: Node.js, Express, MongoDB with Mongoose
 
-APIs: OpenMeteo (weather), Overpass (restaurants via OpenStreetMap), Ticketmaster (events)
+- Map: Leaflet for interactive map pins, maptiler
 
-Backend: Node.js, Express, MongoDB with Mongoose
+- APIs: OpenMeteo (weather), Overpass (restaurants via OpenStreetMap), Ticketmaster (events)
 
-Testing: Vitest
+- Testing: Vitest
 
 ## Installation
 
@@ -59,4 +59,6 @@ Testing: Vitest
 
 
 ## Screenshots
+
+
 
