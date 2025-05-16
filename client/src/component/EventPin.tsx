@@ -30,12 +30,9 @@ function EventPin({position,eventList, favoriteEvents,toggleFavorite}:PinProps) 
       <MarkerClusterGroup>
         {
             eventList.map((event:Event)=>{
-                // console.log('event: ',event);
                 event.isFavorite=false;
                 const latitude=Number(event._embedded.venues[0].location.latitude);
                 const longitude=Number(event._embedded.venues[0].location.longitude);
-                // console.log('event latitude: ',latitude);
-                // console.log('event longitude: ',longitude);
                 const eventPosition:[number,number]=[latitude,longitude];
                 return <Marker key={event.id} position={eventPosition}>
                     <Popup>
