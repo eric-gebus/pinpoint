@@ -29,6 +29,7 @@ PinPoint is your real-time travel companion, helping you instantly discover loca
 ## Usage/Examples
 
 1. Start the project locally by running npm run dev in both the /client and /server directories.
+1. Set your browser to the iPhone 14 Pro Max dimensions through the devtools.
 1. On the landing page, allow location access when prompted.
 1. Tap the GPS button at the bottom-right corner to fetch your current location.
 1. Use the category selector at the top-right of the map to browse nearby events or restaurants.
